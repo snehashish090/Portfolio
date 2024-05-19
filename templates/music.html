@@ -1,10 +1,15 @@
-
 {% extends "base.html" %}
 
 {% block head %}
 
 <style>
-    .contain{
+    body, html {
+        height: 100%;
+        font-family: 'Courier New', Courier, monospace;
+        margin: 0;
+    }
+
+    .contain {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -13,25 +18,129 @@
         margin: 20px;
     }
 
-    .contain .card{
-        margin:20px;
+    .contain .card {
+        margin: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s ease, transform 1s ease;
     }
+
+    .contain .card.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .contain .card:hover {
+        box-shadow: 20px 20px 20px 20px lightgrey;
+        width: 18.1rem;
+    }
+
+    .image1 {
+        position: relative;
+        height: 80%;
+        width: 100%;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    .image1::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 80%;
+        width: 100%;
+        background: url("{{ url_for('static', filename='spring-concert.jpeg') }}") center/cover no-repeat;
+        filter: blur(0px);
+        z-index: 1;
+    }
+
+    .text {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        margin: auto;
+        color: white;
+        text-align: center;
+        padding-top: 10%;
+    }
+
+    .text h1 {
+        font-weight: 100;
+        font-size: 40px;
+    }
+
+    .winter-concert{
+        width:80%;
+        margin-left: 10%;
+        height:100%;
+    }
+
+    @media screen and (max-width:480px){
+        .winter-concert{
+            width:auto;
+        }
+    }
+
 </style>
 {% endblock %}
 
 {% block body %}
-
-
 <div class="contain">
     {% for i in songs %}
         <div class="card" style="width: 18rem;">
             <a href="{{ i['url'] }}">
-                <img src="{{ i['image']}}" class="card-img-top" alt="...">
+                <img src="{{ i['image'] }}" class="card-img-top" alt="...">
             </a>
             <div class="card-body">
-            <h5 style="text-align: center" class="card-text">{{ i['title'] }}</h5>
+                <h5 style="text-align: center" class="card-text">{{ i['title'] }}</h5>
             </div>
         </div>
     {% endfor %}
 </div>
+
+<div class="image1">
+    <div class="text">
+        <h1 id="intro-title"></h1>
+    </div>
+</div>
+
+<iframe class="winter-concert" src="https://www.youtube.com/embed/dic6dEbF4p0?si=1x22vyA2WRwqbk2x&amp;start=3267" 
+title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<iframe class="winter-concert" src="https://www.youtube.com/embed/SShj6S8NgC8?si=wQlmMZbvjARHXRT3&amp;" 
+title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+ referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+<script>
+const songs = document.getElementsByClassName('card');
+var i = 0;
+var speed = 100;
+
+function animatime() {
+    if (i < songs.length) {
+        songs[i].classList.add('show');
+        i++;
+        setTimeout(animatime, speed);
+    }
+}
+
+animatime();
+
+var j = 0;
+var txt = "Videos Of Live Performances";
+var typingSpeed = 50;
+
+function typeWriter() {
+    if (j < txt.length) {
+        document.getElementById("intro-title").innerHTML += txt.charAt(j);
+        j++;
+        setTimeout(typeWriter, typingSpeed);
+    }
+}
+
+typeWriter();
+</script>
 {% endblock %}
