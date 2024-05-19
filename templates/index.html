@@ -1,0 +1,77 @@
+
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    body, html {
+        height: 100%;
+        font-family: 'Courier New', Courier, monospace;
+        margin: 0;
+    }
+
+    .introduction {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .introduction::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: url("{{ url_for('static', filename='intro.jpeg') }}") center/cover no-repeat;
+        filter: blur(0px);
+        z-index: 1;
+    }
+
+    .text {
+        position: relative;
+        z-index: 2;
+        width: 70%;
+        margin: auto;
+        color: white;
+        text-align: center;
+        padding-top: 10%;
+    }
+
+    .text h1
+    {
+        font-weight: 100;
+        font-size: 40px;
+    }
+    
+</style>
+{% endblock %}
+
+{% block body %}
+
+
+<div class="introduction">
+    <div class="text">
+        <h1 id="intro-title"></h1>
+    </div>
+</div>
+
+<div class="text">
+</div>
+
+<script>
+
+    var i = 0;
+    var txt = "Hey! I am Snehashish Laskar, IB Student, Musician and Science Enthusiast";
+    var speed = 50;
+    function typeWriter() {
+        if (i < txt.length) {
+            document.getElementById("intro-title").innerHTML += txt.charAt(i);
+            i++;
+            setTimeout(typeWriter, speed);
+        }
+    }
+    typeWriter();
+
+</script>
+{% endblock %}

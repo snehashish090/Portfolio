@@ -1,0 +1,37 @@
+
+{% extends "base.html" %}
+
+{% block head %}
+
+<style>
+    .contain{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .contain .card{
+        margin:20px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+
+<div class="contain">
+    {% for i in songs %}
+        <div class="card" style="width: 18rem;">
+            <a href="{{ i['url'] }}">
+                <img src="{{ i['image']}}" class="card-img-top" alt="...">
+            </a>
+            <div class="card-body">
+            <h5 style="text-align: center" class="card-text">{{ i['title'] }}</h5>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
