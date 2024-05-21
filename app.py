@@ -105,7 +105,7 @@ def blogPost():
 
         for i in request.form:
             if i!= "title" and i!= "date":
-                var["structure"[i]] = request.form.get(i)
+                var["structure"][i] = request.form.get(i)
 
         blogs.append(var)
 
