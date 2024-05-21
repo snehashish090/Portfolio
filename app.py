@@ -98,12 +98,14 @@ def blogPost():
             "id":str(random.randint(100000, 1000000)),
             "title":request.form.get('title'),
             "date":request.form.get('date'),
-            "structure":[]
+            "structure":{
+
+            }
         }
 
         for i in request.form:
             if i!= "title" and i!= "date":
-                var["structure"].append(request.form.get(i))
+                var["structure"[i]] = request.form.get(i)
 
         blogs.append(var)
 
