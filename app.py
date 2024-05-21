@@ -8,6 +8,7 @@ from flask_mail import Mail
 import socket
 import os
 import requests
+import random
 
 path = str(Path(__file__).parent) + "/"
 
@@ -47,8 +48,17 @@ def get_ip():
 host_server=f"http://{str(get_ip())}:8000/"
 
 
-with open(path+'songs.json', 'r') as file:
-    songs = json.load(file)
+if not os.path.exists(path+"data"):
+    os.mkdir(path+"data")
+
+if not os.path.exists(path+"data/songs.json"):
+    with open(path+"data/songs.json", "w") as file:
+        json.dump([], file)
+
+if not os.path.exists(path+"data/blogs.json"):
+    with open(path+"data/blogs.json", "w") as file:
+        json.dump([], file)
+        
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -64,12 +74,66 @@ def dev():
 
 @app.route('/music', methods=['GET', 'POST'])
 def music():
+    with open(path+'data/songs.json', 'r') as file:
+        songs = json.load(file)
     return render_template("music.html", songs=songs)
 
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
-    return "Upcoming Soon!"
+    with open(path+'data/blogs.json', 'r') as file:
+        blogs = json.load(file)
+    return render_template("blog.html", blogs=blogs)
 
+@app.route('/blogPost', methods=['GET', 'POST'])
+def blogPost():
+    with open(path+'data/blogs.json', 'r') as file:
+        blogs = json.load(file)
+    if request.method == 'GET':
+        uname=config["username"]
+        pw=config["password"]
+        print(uname,pw)
+        return render_template("addBlog.html")
+    else:
+        var = {
+            "id":str(random.randint(100000, 1000000)),
+            "title":request.form.get('title'),
+            "date":request.form.get('date'),
+            "structure":[]
+        }
 
+        for i in request.form:
+            if i!= "title" and i!= "date":
+                var["structure"].append(request.form.get(i))
+
+        blogs.append(var)
+
+        with open(path+"data/blogs.json", "w") as file:
+            json.dump(blogs,file, indent=4)
+
+        return redirect("/blog")
+    
+@app.route('/deletePost', methods=['GET', 'POST'])
+def delPost():
+    with open(path+'data/blogs.json', 'r') as file:
+        blogs = json.load(file)
+
+    if request.method == 'GET':
+        uname=config["username"]
+        pw=config["password"]
+
+        print(uname,pw)
+        return render_template("deletePost.html", blogs=blogs)
+    else:
+        id = request.form.get('id')
+
+        for i in blogs:
+            if i["id"] == id:
+                blogs.remove(i)
+                break
+
+        with open(path+"data/blogs.json", "w") as file:
+            json.dump(blogs,file, indent=4)
+
+        return redirect("/blog")
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")

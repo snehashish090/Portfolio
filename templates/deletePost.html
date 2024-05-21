@@ -1,0 +1,65 @@
+
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .container{
+        padding:40px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <form class="form" method="POST">
+        <div class="list">
+            <ul class="list-group">
+                
+                {% for i in blogs %}
+                    <a href="#{{i['id']}}" class="list-group-item list-group-item-action">{{i["title"]}}
+                        <br>{{i["id"]}}
+                    </a>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="form-group">
+          <label for="exampleFormControlInput1">Enter the ID</label>
+          <input type="text" name="id" class="form-control" id="exampleFormControlInput1" placeholder="Enter the ID">
+        </div>
+        <button style="border:1px black solid;" type="submit" class="btn">Submit</button>
+    </form>
+</div>
+
+<script>
+
+    const username = "snehashish";
+    const password = "snehashish08036#@#1538";
+
+    function checkCredentials() {
+        const inputUsername = prompt("Please enter your username:");
+        const inputPassword = prompt("Please enter your password:");
+
+        if (inputUsername === username && inputPassword === password) {
+            // Allow access
+            return true;
+        } else {
+            alert("Invalid credentials. Redirecting to home...");
+            window.location.href = "/"; // Replace '/' with the actual home URL if needed
+            return false;
+        }
+    }
+
+    if (!checkCredentials()) {
+        event.preventDefault();
+    }
+</script>
+
+
+
+
+{% endblock %}
+

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<style>
+    .blog-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 30px;
+    }
+
+    .blogs {
+        width: 70%;
+        padding: 30px;
+    }
+
+    .card-body img {
+        max-width: 100%;
+        margin: 20px 0;
+    }
+
+    .list {
+        width: 35%;
+        padding: 30px;
+    }
+
+    .card{
+        margin-top: 50px;
+    }
+
+    .card:first-child{
+        margin-top: 0;
+    }
+    
+    @media (max-width: 768px) {
+        .blog-container {
+            flex-direction: column;
+        }
+
+        .blogs, .list {
+            width: 100%;
+            padding: 10px;
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="blog-container">
+    <div class="list">
+        <ul class="list-group">
+            
+            {% for i in blogs %}
+                <a href="#{{i['id']}}" class="list-group-item list-group-item-action">{{i["title"]}}
+                    <br>{{i["date"]}}
+                </a>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="blogs">
+        {% if blogs|length > 0 %}
+            {% for i in blogs %}
+                <div class="card" id="{{i['id']}}">
+                    <div class="card-header">
+                        <h1>{{ i["title"] }}</h1>
+                        <p>{{ i["date"] }}</p>
+                    </div>
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            {% for j in i["structure"] %}
+                                {% if "para" in j %}
+                                    <p>{{ i["structure"][j] }}</p>
+                                {% elif "img" in j %}
+                                    <img src="{{ i['structure'][j] }}" alt="">
+                                {% endif %}
+                            {% endfor %}
+                            <footer class="blockquote-footer">
+                                <cite title="Source Title">Snehashish Laskar</cite>
+                            </footer>
+                        </blockquote>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1>No Posts yet!</h1>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

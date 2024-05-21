@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .container{
+        padding:40px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <form class="form" method="POST">
+        <div class="form-group">
+          <label for="exampleFormControlInput1">Enter the Title</label>
+          <input type="text" name="title" class="form-control" id="exampleFormControlInput1" placeholder="Enter Ttitle">
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Enter The Date (DD/MM/YYY)</label>
+          <input type="text" name="date"class="form-control" id="exampleFormControlInput1" placeholder="Enter Ttitle">
+        </div>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button style="border:1px black solid;" type="button" class="btn" onclick="addPara()">Add Paragraph</button>
+            <button style="border:1px black solid;" type="button" class="btn" onclick="addImage()">Add Image</button>
+        </div>
+        <div style="margin-top: 30px;" class="structure"></div>
+        <button style="border:1px black solid;" type="submit" class="btn">Submit</button>
+    </form>
+</div>
+<script>
+    const username = "snehashish";
+    const password = "snehashish08036#@#1538";
+
+    function checkCredentials() {
+        const inputUsername = prompt("Please enter your username:");
+        const inputPassword = prompt("Please enter your password:");
+
+        if (inputUsername === username && inputPassword === password) {
+            // Allow access
+            return true;
+        } else {
+            alert("Invalid credentials. Redirecting to home...");
+            window.location.href = "/"; // Replace '/' with the actual home URL if needed
+            return false;
+        }
+    }
+
+    if (!checkCredentials()) {
+        event.preventDefault();
+    }
+
+    let uniqueId = 0;
+    
+    function addPara() {
+      const container = document.querySelector('.structure');
+      const newPara = `
+        <div class="form-group">
+          <label for="exampleFormControlTextarea${uniqueId}">Example textarea</label>
+          <textarea class="form-control" name="para${uniqueId}" id="exampleFormControlTextarea${uniqueId}" rows="3"></textarea>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', newPara);
+      uniqueId++;
+    }
+    uniqueId = 0;
+
+    function addImage() {
+    const container = document.querySelector('.structure');
+    const newImage = `
+        <div class="form-group">
+        <label for="exampleFormControlFile${uniqueId}">Example file input</label>
+        <input type="file" name="image${uniqueId}" class="form-control-file" id="exampleFormControlFile${uniqueId}">
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newImage);
+    uniqueId++;
+    }
+</script>
+
+
+
+
+
+
+
+{% endblock %}

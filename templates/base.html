@@ -3,80 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snehashish Laskar | Blog</title>
+    <title>Snehashish Laskar</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        #topnav{
-            padding:30px;
+
+        .dropdown-menu{
+            background-color: black;
+            color:white;
+            border:none;
+        }
+
+        .dropdown-item{
+            color: white;
+        }
+
+        .dropdown-item:hover{
+            color: black !important;
+            background-color: white;
+        }
+        .dropdown-toggle:focus {
+            outline: none !important;
+            border: none;
+        }
+
+        .dropdown:hover> .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu:hover > .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+        }
+
+        .dropdown-item:focus{
+            background: none !important;
+        }
+
+        #topnav {
+            padding: 30px;
             background-color: #dfe6e9;
             text-align: center;
             font-family: 'Courier New', Courier, monospace;
         }
 
-        .menu{
+        .menu {
             background-color: black;
             font-family: 'Courier New', Courier, monospace;
-            padding:15px;
+            padding: 15px;
         }
 
-        .menu a{
+        .nav-link {
             color: white !important;
             text-decoration: none;
             border-bottom: 1px black solid;
-            margin-right:10px;
+            margin-right: 10px;
         }
 
-        .menu a:hover{
+        .nav-link:hover {
             border-color: white !important;
-        }   
+        }
 
-        body{
+        body {
             font-family: 'Courier New', Courier, monospace;
         }
 
-        footer .nav-link{
+        footer .nav-link {
             font-size: 25px;
-            margin-right:20px;
+            margin-right: 20px;
         }
+
+        .dropdown-submenu .dropdown-menu {
+            left: auto;
+            right: 100%;
+        }
+
+        .dropdown-submenu .dropdown-item {
+            text-align: left;
+        }
+        .scroll-up-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            display: none;
+            background-color: #555;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .scroll-up-btn:hover {
+            background-color: #444;
+        }
+        @media (max-width: 600px) {
+
+            .dropdown-item{
+                max-width: 50%;
+            }
+        }
+
+        .dropdown-toggle:hover, .dropdown-toggle:focus{
+            border: none !important;
+        }
+
+        
     </style>
     {% block head %}{% endblock %}
 </head>
-    <body>
+<body>
     <!-- As a heading -->
     <nav id="topnav">
         <h1>Snehashish Laskar</h1>
-        
     </nav>
 
     <div class="menu">
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link" href="/"><i style = "margin-right:10px" class="bi bi-house"></i>Home</a>
-              </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/about"></i>About</a>
+                <a class="nav-link" href="/"><i style="margin-right:10px" class="bi bi-house"></i>Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/blog">Blog</a>
+                <a class="nav-link" href="/about">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/music"></i>Music</a>
+                <a class="nav-link" href="/blog">Blog</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/dev">Developer Portfolio</a>
+                <a class="nav-link" href="/music">Music</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/dev">Developer Portfolio</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="experiencesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    My Experiences
+                </a>
+                <div class="dropdown-menu" aria-labelledby="experiencesDropdown">
+                    <div class="dropdown-submenu">
+                        <a class="dropdown-item dropdown-toggle" href="#">Creativity</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Science National Honors Society</a>
+                            <a class="dropdown-item" href="#">Carbon Net Neutral Project</a>
+                            <a class="dropdown-item" href="#">Model United Nations</a>
+                            <a class="dropdown-item" href="#">Multimedia Club</a>
+                            <a class="dropdown-item" href="#">Coding Club</a>
+                            <a class="dropdown-item" href="#">Learning Guitar</a>
+                            <a class="dropdown-item" href="#">Learning Piano</a>
+                            <a class="dropdown-item" href="#">Learning Music Production</a>
+                            <a class="dropdown-item" href="#">Learning Programming</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-submenu">
+                        <a class="dropdown-item dropdown-toggle" href="#">Activity</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">KIS Talent Shows</a>
+                            <a class="dropdown-item" href="#">KIS Dorm Dance Compeition</a>
+                            <a class="dropdown-item" href="#">Waterloo Math Compeitions</a>
+                        </div>
+                    </div>
+                    <div class="dropdown-submenu">
+                        <a class="dropdown-item dropdown-toggle" href="#">Service</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Miyawaki Forest Plantation</a>
+                            <a class="dropdown-item" href="#">Building the CEH Website</a>
+                            <a class="dropdown-item" href="#">Helping at the Seed garden</a>
+                        </div>
+                    </div>
+                </div>
             </li>
         </ul>
     </div>
 
-
-
     {% block body %}
-    
     {% endblock %}
+
+    <button onclick="topFunction()" id="myBtn" class="scroll-up-btn">^</button>
+    
     <footer class="menu">
         <ul class="nav justify-content-center">
             <li class="nav-item">
@@ -94,8 +213,43 @@
         </ul>
     </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
-    </body>
+    
+    <script>
+        // Get the button
+            let mybutton = document.getElementById("myBtn");
+
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function() {scrollFunction()};
+
+            function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            }
+        $(document).ready(function () {
+            $('.dropdown').hover(function () {
+                $(this).find('.dropdown-menu').first().stop(true, true).delay(50).fadeIn(150);
+            }, function () {
+                $(this).find('.dropdown-menu').first().stop(true, true).delay(50).fadeOut(150);
+            });
+
+            $('.dropdown-submenu').hover(function () {
+                $(this).find('.dropdown-menu').first().stop(true, true).delay(50).fadeIn(150);
+            }, function () {
+                $(this).find('.dropdown-menu').first().stop(true, true).delay(50).fadeOut(150);
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+</body>
 </html>
