@@ -29,27 +29,6 @@
     </form>
 </div>
 <script>
-    const username = "snehashish";
-    const password = "snehashish08036#@#1538";
-
-    function checkCredentials() {
-        const inputUsername = prompt("Please enter your username:");
-        const inputPassword = prompt("Please enter your password:");
-
-        if (inputUsername === username && inputPassword === password) {
-            // Allow access
-            return true;
-        } else {
-            alert("Invalid credentials. Redirecting to home...");
-            window.location.href = "/"; // Replace '/' with the actual home URL if needed
-            return false;
-        }
-    }
-
-    if (!checkCredentials()) {
-        event.preventDefault();
-    }
-
     let uniqueId = 0;
     
     function addPara() {

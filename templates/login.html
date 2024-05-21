@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .btn{
+        background-color: black !important;
+        color:white;
+        width: 100%;
+        padding:10px;
+    }
+
+    .btn:hover{
+        background-color: white !important;
+        color:black;
+        border:1px black solid;
+    }
+    .container form{
+        height:100%;
+        width:60%;
+        margin:auto !important;
+    }
+
+    .container{
+        padding:10%;
+    }
+
+    @media screen and (max-width:600px)
+    {
+        .container form{
+        height:100%;
+        width:90%;
+        margin:auto !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <form method="post">
+        <h3>{{error}}</h3>
+        <h1>Login Portal</h1>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Enter your email</label>
+          <input type="email" class="form-control" name="email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Enter your Password</label>
+          <input type="password" class="form-control" name="password">
+        </div>
+        <button type="submit" class="btn">Submit</button>
+      </form>
+</div>
+{% endblock %}

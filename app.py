@@ -9,6 +9,7 @@ import socket
 import os
 import requests
 import random
+import json
 
 path = str(Path(__file__).parent) + "/"
 
@@ -23,6 +24,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 mail = Mail(app)
+Session(app)
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -58,7 +60,15 @@ if not os.path.exists(path+"data/songs.json"):
 if not os.path.exists(path+"data/blogs.json"):
     with open(path+"data/blogs.json", "w") as file:
         json.dump([], file)
-        
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if not session.get("logStatus"):
+            session["logStatus"] = False
+        if session["logStatus"] == False:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return wrap
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -85,13 +95,11 @@ def blog():
     return render_template("blog.html", blogs=blogs)
 
 @app.route('/blogPost', methods=['GET', 'POST'])
+@login_required
 def blogPost():
     with open(path+'data/blogs.json', 'r') as file:
         blogs = json.load(file)
     if request.method == 'GET':
-        uname=config["username"]
-        pw=config["password"]
-        print(uname,pw)
         return render_template("addBlog.html")
     else:
         var = {
@@ -114,16 +122,14 @@ def blogPost():
 
         return redirect("/blog")
     
+
 @app.route('/deletePost', methods=['GET', 'POST'])
+@login_required
 def delPost():
     with open(path+'data/blogs.json', 'r') as file:
         blogs = json.load(file)
 
     if request.method == 'GET':
-        uname=config["username"]
-        pw=config["password"]
-
-        print(uname,pw)
         return render_template("deletePost.html", blogs=blogs)
     else:
         id = request.form.get('id')
@@ -137,5 +143,27 @@ def delPost():
             json.dump(blogs,file, indent=4)
 
         return redirect("/blog")
+    
+
+@app.route("/login", methods=["GET", "POST"])
+def login_page():
+    if request.method == "GET":
+        return render_template("login.html")
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+    if email == config["email"] and password == config["password"]:
+            session["logStatus"] = True
+            return redirect("/")
+    else:
+        return render_template("login.html", error="Invalid Email or Password")
+    
+@app.route("/logout", methods=["GET", "POST"])
+def logout_page():
+    session["logStatus"] = False
+    return redirect("/")
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")
