@@ -109,18 +109,22 @@ def blogPost():
             "date": request.form.get('date'),
             "structure": {}
         }
+
+        print(dict(request.form), dict(request.files))
         
-        
-        # Process file uploads
-        for file_key in request.files:
-            file = request.files[file_key]
-            if file.filename == '':
-                continue
-            if file:
-                
-                filename = secure_filename(file.filename)
-                var['structure'][file_key] = url_for("static", filename=str(filename))
-                file.save(os.path.join(path + 'static', filename))
+        for i in request.form:
+            if i!= "title" and i!= "date" and "image" not in i:
+                var["structure"][i] = request.form.get(i)
+            if "image" in i:
+                print("Hello Debug?")
+                file = request.files.get(i)
+                print(file.filename)
+                if file.filename == '':
+                    continue
+                if file:
+                    filename = secure_filename(file.filename)
+                    var['structure'][i] = url_for("static", filename=str(filename))
+                    file.save(os.path.join(path + 'static', filename))
         
         blogs.append(var)
         print(var)

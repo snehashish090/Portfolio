@@ -21,6 +21,7 @@
     </div>
 
     <div class="btn-group" role="group" aria-label="Basic example">
+      <button style="border:1px black solid;" type="button" class="btn" onclick="addSubHeading()">Add Sub Heading</button>
         <button style="border:1px black solid;" type="button" class="btn" onclick="addPara()">Add Paragraph</button>
         <button style="border:1px black solid;" type="button" class="btn" onclick="addImage()">Add Image</button>
     </div>
@@ -51,6 +52,21 @@
         <div class="form-group">
         <label for="exampleFormControlFile${uniqueId}">Example file input</label>
         <input type="file" name="image${uniqueId}" class="form-control-file" id="exampleFormControlFile${uniqueId}">
+        <input style="display:none" type="text" name="image${uniqueId}" class="form-control"> 
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newImage);
+    uniqueId++;
+    }
+
+    uniqueId = 0;
+
+    function addSubHeading() {
+    const container = document.querySelector('.structure');
+    const newImage = `
+        <div class="form-group">
+        <label for="exampleFormControlFile${uniqueId}">Example file input</label>
+        <input type="text" name="sub${uniqueId}" class="form-control">
         </div>
     `;
     container.insertAdjacentHTML('beforeend', newImage);

@@ -73,6 +73,8 @@
                             {% for j in i["structure"] %}
                                 {% if "para" in j %}
                                     <p>{{ i["structure"][j] }}</p>
+                                {% elif "sub" in j %}
+                                    <h3>{{ i["structure"][j] }}</h3>
                                 {% elif "image" in j %}
                                     <img src="{{ i['structure'][j] }}" alt="">
                                 {% endif %}
