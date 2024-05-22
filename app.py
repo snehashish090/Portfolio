@@ -125,6 +125,9 @@ def blogPost():
                     filename = secure_filename(file.filename)
                     var['structure'][i] = url_for("static", filename=str(filename))
                     file.save(os.path.join(path + 'static', filename))
+
+                    with open(path+".gitignore", "a") as file:
+                        file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
         
         blogs.append(var)
         print(var)
@@ -151,9 +154,15 @@ def delPost():
                 for j in i["structure"]:
                     if "image" in j:
                         os.remove(path[:-1]+i["structure"][j])
+                with open(path+".gitignore","r") as file:
+                    lines = file.readlines()
+                    with open(path+".gitignore", "w") as file:
+                        for line in lines:
+                            if i["structure"][j][1:] not in line:
+                                file.write(line)
                 blogs.remove(i)
                 break
-
+            
         with open(path+"data/blogs.json", "w") as file:
             json.dump(blogs,file, indent=4)
 
