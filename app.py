@@ -154,12 +154,12 @@ def delPost():
                 for j in i["structure"]:
                     if "image" in j:
                         os.remove(path[:-1]+i["structure"][j])
-                with open(path+".gitignore","r") as file:
-                    lines = file.readlines()
-                    with open(path+".gitignore", "w") as file:
-                        for line in lines:
-                            if i["structure"][j][1:] not in line:
-                                file.write(line)
+                    with open(path+".gitignore","r") as file:
+                        lines = file.readlines()
+                        with open(path+".gitignore", "w") as file:
+                            for line in lines:
+                                if i["structure"][j][1:] not in line:
+                                    file.write(line)
                 blogs.remove(i)
                 break
             
