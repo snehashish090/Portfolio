@@ -10,7 +10,7 @@ import os
 import requests
 import random
 import json
-
+from werkzeug.utils import secure_filename
 path = str(Path(__file__).parent) + "/"
 
 app = Flask("Blog Website")
@@ -97,30 +97,38 @@ def blog():
 @app.route('/blogPost', methods=['GET', 'POST'])
 @login_required
 def blogPost():
-    with open(path+'data/blogs.json', 'r') as file:
-        blogs = json.load(file)
     if request.method == 'GET':
         return render_template("addBlog.html")
     else:
+        with open(path + 'data/blogs.json', 'r') as file:
+            blogs = json.load(file)
+        
         var = {
-            "id":str(random.randint(100000, 1000000)),
-            "title":request.form.get('title'),
-            "date":request.form.get('date'),
-            "structure":{
-
-            }
+            "id": str(random.randint(100000, 1000000)),
+            "title": request.form.get('title'),
+            "date": request.form.get('date'),
+            "structure": {}
         }
-
-        for i in request.form:
-            if i!= "title" and i!= "date":
-                var["structure"][i] = request.form.get(i)
-
+        
+        
+        # Process file uploads
+        for file_key in request.files:
+            file = request.files[file_key]
+            if file.filename == '':
+                continue
+            if file:
+                
+                filename = secure_filename(file.filename)
+                var['structure'][file_key] = url_for("static", filename=str(filename))
+                file.save(os.path.join(path + 'static', filename))
+        
         blogs.append(var)
-
-        with open(path+"data/blogs.json", "w") as file:
-            json.dump(blogs,file, indent=4)
-
+        print(var)
+        with open(path + "data/blogs.json", "w") as file:
+            json.dump(blogs, file, indent=4)
+        
         return redirect("/blog")
+
     
 
 @app.route('/deletePost', methods=['GET', 'POST'])
@@ -136,6 +144,9 @@ def delPost():
 
         for i in blogs:
             if i["id"] == id:
+                for j in i["structure"]:
+                    if "image" in j:
+                        os.remove(path[:-1]+i["structure"][j])
                 blogs.remove(i)
                 break
 
@@ -164,6 +175,17 @@ def logout_page():
     session["logStatus"] = False
     return redirect("/")
 
+@app.route("/creativity", methods=["GET", "POST"])
+def creativity():
+    return render_template("creativity.html")
+
+@app.route("/activity", methods=["GET", "POST"])
+def activity():
+    return render_template("activity.html")
+
+@app.route("/service", methods=["GET", "POST"])
+def service():
+    return render_template("service.html")
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")

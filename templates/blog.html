@@ -10,7 +10,7 @@
     }
 
     .blogs {
-        width: 70%;
+        width: 80%;
         padding: 30px;
     }
 
@@ -20,7 +20,7 @@
     }
 
     .list {
-        width: 35%;
+        width:30%;
         padding: 30px;
     }
 
@@ -73,7 +73,7 @@
                             {% for j in i["structure"] %}
                                 {% if "para" in j %}
                                     <p>{{ i["structure"][j] }}</p>
-                                {% elif "img" in j %}
+                                {% elif "image" in j %}
                                     <img src="{{ i['structure'][j] }}" alt="">
                                 {% endif %}
                             {% endfor %}

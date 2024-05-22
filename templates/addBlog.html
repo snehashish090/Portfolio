@@ -10,23 +10,24 @@
 
 {% block body %}
 <div class="container">
-    <form class="form" method="POST">
-        <div class="form-group">
-          <label for="exampleFormControlInput1">Enter the Title</label>
-          <input type="text" name="title" class="form-control" id="exampleFormControlInput1" placeholder="Enter Ttitle">
-        </div>
-        <div class="form-group">
-          <label for="exampleFormControlSelect1">Enter The Date (DD/MM/YYY)</label>
-          <input type="text" name="date"class="form-control" id="exampleFormControlInput1" placeholder="Enter Ttitle">
-        </div>
+  <form class="form" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="exampleFormControlInput1">Enter the Title</label>
+      <input type="text" name="title" class="form-control" id="exampleFormControlInput1" placeholder="Enter Ttitle">
+    </div>
+    <div class="form-group">
+      <label for="exampleFormControlSelect1">Enter The Date (DD/MM/YYY)</label>
+      <input type="text" name="date"class="form-control" id="exampleFormControlInput1" placeholder="Enter Ttitle">
+    </div>
 
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <button style="border:1px black solid;" type="button" class="btn" onclick="addPara()">Add Paragraph</button>
-            <button style="border:1px black solid;" type="button" class="btn" onclick="addImage()">Add Image</button>
-        </div>
-        <div style="margin-top: 30px;" class="structure"></div>
-        <button style="border:1px black solid;" type="submit" class="btn">Submit</button>
-    </form>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button style="border:1px black solid;" type="button" class="btn" onclick="addPara()">Add Paragraph</button>
+        <button style="border:1px black solid;" type="button" class="btn" onclick="addImage()">Add Image</button>
+    </div>
+    <div style="margin-top: 30px;" class="structure"></div>
+    <button style="border:1px black solid;" type="submit" class="btn">Submit</button>
+</form>
+
 </div>
 <script>
     let uniqueId = 0;
