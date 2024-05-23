@@ -2,4 +2,5 @@ env/
 __pycache__/
 server.pem
 .gitignore
-static/Screenshot_2024-05-20_at_10.21.23_AM.png
+data/blogs.json
+

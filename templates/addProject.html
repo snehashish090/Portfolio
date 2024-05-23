@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .container{
+        padding:40px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <form class="form" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <labe>Enter the Title</label>
+      <input type="text" name="title" class="form-control" placeholder="Enter Ttitle">
+    </div>
+    <div class="form-group">
+      <label>Enter Description</label>
+      <textarea class="form-control" name="description"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Enter link to github: </label>
+      <input type="text" name="github" class="form-control" placeholder="Enter Date">
+    </div>
+    <div class="form-group">
+      <label>Add Image</label>
+      <input type="file" name="image" class="form-control-file" required >
+    </div>
+    <button style="border:1px black solid;" type="submit" class="btn">Submit</button>
+</form>
+</div>
+
+{% endblock %}

@@ -162,17 +162,21 @@
                     <a class="dropdown-item" href="/service">Service</a>
                 </div>
             </li>
+       
             {% if session.get("logStatus") %}
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/blogPost">New Blog Post</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="experiencesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin Links
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/blogPost">New Blog Post</a>
+                        <a class="dropdown-item" href="/deletePost">Delete Blog Post</a>
+                        <a class="dropdown-item" href="/blogPost">New Developer Project</a>
+                        <a class="dropdown-item" href="/deletePost">Delete Developer Project</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                    </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/deletePost">Delete Blog Post</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
+                
             {% endif %}
             
         </ul>
