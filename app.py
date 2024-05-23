@@ -57,6 +57,10 @@ if not os.path.exists(path+"data/songs.json"):
     with open(path+"data/songs.json", "w") as file:
         json.dump([], file)
 
+if not os.path.exists(path+"data/projects.json"):
+    with open(path+"data/projects.json", "w") as file:
+        json.dump([], file)
+        
 if not os.path.exists(path+"data/blogs.json"):
     with open(path+"data/blogs.json", "w") as file:
         json.dump([], file)
@@ -80,7 +84,9 @@ def about():
 
 @app.route('/dev', methods=['GET', 'POST'])
 def dev():
-    return render_template("dev.html")
+    with open(path+'data/projects.json', 'r') as file:
+        projects = json.load(file)
+    return render_template("dev.html", projects=projects)
 
 @app.route('/music', methods=['GET', 'POST'])
 def music():

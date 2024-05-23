@@ -1,10 +1,157 @@
-
 {% extends "base.html" %}
 
 {% block head %}
+<style>
+    body, html {
+        height: 100%;
+        font-family: 'Courier New', Courier, monospace;
+        margin: 0;
+    }
 
+    .contain {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .contain .card {
+        margin: 20px;
+        padding:20px;
+        background-color:#ecf0f1;
+        color:black;
+        width:25rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 2s ease, transform 2s ease;
+        border-radius: 5px;
+    }
+
+    .card img{
+        border:0.1px black solid;
+    }
+
+    .contain .card.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .contain .card:hover { 
+        background-color: black !important;
+        color:white;
+        -webkit-transition: background-color 500ms linear;
+        -ms-transition: background-color 500ms linear;
+        transition: background-color 500ms linear;
+    }
+    .contain .card:hover .github{ 
+        background-color: white;
+        color:black;
+        -webkit-transition: background-color 500ms linear;
+        -ms-transition: background-color 500ms linear;
+        transition: background-color 500ms linear;
+    }
+    .image1 {
+        position: relative;
+        height: 80%;
+        width: 100%;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    .image1::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 80%;
+        width: 100%;
+        background: url("{{ url_for('static', filename='spring-concert.jpeg') }}") center/cover no-repeat;
+        filter: blur(0px);
+        z-index: 1;
+    }
+
+    .text {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        margin: auto;
+        color: white;
+        text-align: center;
+        padding-top: 10%;
+    }
+
+    .text h1 {
+        font-weight: 100;
+        font-size: 40px;
+    }
+
+    .winter-concert{
+        width:80%;
+        margin-left: 10%;
+        height:100%;
+    }
+
+
+    @media (max-width: 768px) {
+        .card{
+            width:90%;
+        }
+    }
+    .custom-container{
+        margin-top:50px;
+    }
+    .custom-container h1{
+        text-align: center;
+    }
+
+    .github{
+        background-color: black;
+        color: white;
+        width:100%;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
 
+<div class="custom-container">
+
+    <h1>My Projects</h1>
+    <div class="contain">
+
+        {% for i in projects %}
+            <div class="card">
+                {% if 'url' in i %}
+                <a href="{{i['url']}}"><img src="{{ url_for('static', filename=i['image']) }}" class="card-img-top" alt="..."></a>
+                {% else %}
+                <img src="{{ url_for('static', filename=i['image']) }}" class="card-img-top" alt="...">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title">{{ i['title'] }}</h2>
+                    <p class="card-text">{{ i['description'] }}.</p>
+                    <a href="{{ i['github'] }}" class="btn github"><i class="bi bi-github"></i> Github</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<script>
+const songs = document.getElementsByClassName('card');
+var i = 0;
+var speed = 100;
+
+function animatime() {
+    if (i < songs.length) {
+        songs[i].classList.add('show');
+        i++;
+        setTimeout(animatime, speed);
+    }
+}
+
+animatime();
+</script>
 {% endblock %}
