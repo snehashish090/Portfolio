@@ -136,7 +136,54 @@ def blogPost():
         
         return redirect("/blog")
 
-    
+@app.route("/editPost/<post_id>", methods=["GET", "POST"])
+def editPost(post_id):
+    with open(path+'data/blogs.json', 'r') as file:
+        blogs = json.load(file)
+
+    for blog in blogs:
+        if blog["id"] == post_id:
+            myblog = blog
+
+    print(myblog)
+
+    if request.method == 'GET':
+        return render_template("editBlog.html", blog=myblog)
+    else:
+        var = {
+            "id": blog["id"],
+            "title": request.form.get('title'),
+            "date": request.form.get('date'),
+            "structure": {}
+        }
+
+        for i in request.form:
+            if i!= "title" and i!= "date" and "image" not in i:
+                var["structure"][i] = request.form.get(i)
+            if "image" in i:
+                file = request.files.get(i)
+                print(file.filename)
+                if file.filename == '':
+                    if blog['structure'].get(i) is not None:
+                        var['structure'][i] = blog['structure'].get(i)
+                    else:
+                        continue
+                if file:
+                    filename = secure_filename(file.filename)
+                    var['structure'][i] = url_for("static", filename=str(filename))
+                    file.save(os.path.join(path + 'static', filename))
+
+                    with open(path+".gitignore", "a") as file:
+                        file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
+                        
+        blogs[blogs.index(myblog)] = var
+
+        with open(path + "data/blogs.json", "w") as file:
+            json.dump(blogs, file, indent=4)
+        
+        return redirect("/blog")
+
+
 
 @app.route('/deletePost', methods=['GET', 'POST'])
 @login_required

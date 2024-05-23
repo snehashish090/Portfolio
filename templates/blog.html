@@ -84,6 +84,11 @@
                             </footer>
                         </blockquote>
                     </div>
+                    {% if session.get("logStatus") %}
+                        <div class="card-footer">
+                            <a href="/editPost/{{i['id']}}">Edit Post <i class="bi bi-pencil"></i></a>
+                        </div>
+                    {% endif %}
                 </div>
             {% endfor %}
         {% else %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .container{
+        padding:40px;
+    }
+    .form-group {
+        position: relative;
+    }
+    .delete-button {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <form class="form" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="exampleFormControlInput1">Enter the Title</label>
+      <input type="text" name="title" class="form-control" id="exampleFormControlInput1" value="{{blog['title']}}">
+      <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+    </div>
+    <div class="form-group">
+      <label for="exampleFormControlSelect1">Enter The Date (DD/MM/YYY)</label>
+      <input type="text" name="date" class="form-control" id="exampleFormControlSelect1" value="{{blog['date']}}">
+      <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+    </div>
+    {% for i in blog['structure'] %}
+        {% if 'sub' in i %}
+            <div class="form-group">
+            <label>Enter Subheading</label>
+            <input type="text" name="{{i}}" class="form-control" value="{{blog['structure'][i]}}">
+            <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        {% elif 'image' in i %}
+            <div class="form-group">
+            <label for="exampleFormControlFile{{loop.index}}">Add Image</label>
+            <input type="file" name="{{i}}" class="form-control-file" id="exampleFormControlFile{{loop.index}}">
+            <input style="display:none" type="text" name="{{i}}" class="form-control">
+            <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        {% else %}
+            <div class="form-group">
+            <label>Enter Paragraph</label>
+            <textarea class="form-control" name="{{i}}">{{blog['structure'][i]}}</textarea>
+            <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        {% endif %}
+    {% endfor %}
+    <div style="margin-top: 30px;" class="structure"></div>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button style="border:1px black solid;" type="button" class="btn" onclick="addSubHeading()">Add Sub Heading</button>
+          <button style="border:1px black solid;" type="button" class="btn" onclick="addPara()">Add Paragraph</button>
+          <button style="border:1px black solid;" type="button" class="btn" onclick="addImage()">Add Image</button>
+      </div>
+    <button style="border:1px black solid;" type="submit" class="btn">Submit</button>
+  </form>
+</div>
+
+<script>
+let uniqueId = 0;
+
+function addPara() {
+    const container = document.querySelector('.structure');
+    const newPara = `
+    <div class="form-group">
+        <label for="exampleFormControlTextarea${uniqueId}">Enter Paragraph</label>
+        <textarea class="form-control" name="para${uniqueId}" id="exampleFormControlTextarea${uniqueId}" rows="3"></textarea>
+        <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+    </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newPara);
+    uniqueId++;
+}
+uniqueId = 0;
+
+function addImage() {
+const container = document.querySelector('.structure');
+const newImage = `
+    <div class="form-group">
+    <label for="exampleFormControlFile${uniqueId}">Add Image</label>
+    <input type="file" name="image${uniqueId}" class="form-control-file" id="exampleFormControlFile${uniqueId}">
+    <input style="display:none" type="text" name="image${uniqueId}" class="form-control"> 
+    <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+    </div>
+`;
+container.insertAdjacentHTML('beforeend', newImage);
+uniqueId++;
+}
+
+uniqueId = 0;
+
+function addSubHeading() {
+const container = document.querySelector('.structure');
+const newImage = `
+    <div class="form-group">
+    <label for="exampleFormControlFile${uniqueId}">Enter Subheading</label>
+    <input type="text" name="sub${uniqueId}" class="form-control">
+    <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+    </div>
+`;
+container.insertAdjacentHTML('beforeend', newImage);
+uniqueId++;
+}
+function deleteInput(button) {
+    var formGroup = button.parentElement;
+    formGroup.remove();
+}
+</script>
+{% endblock %}

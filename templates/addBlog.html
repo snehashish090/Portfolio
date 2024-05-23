@@ -17,7 +17,7 @@
     </div>
     <div class="form-group">
       <label for="exampleFormControlSelect1">Enter The Date (DD/MM/YYY)</label>
-      <input type="text" name="date"class="form-control" id="exampleFormControlInput1" placeholder="Enter Ttitle">
+      <input type="text" name="date"class="form-control" id="exampleFormControlInput1" placeholder="Enter Date">
     </div>
 
     <div class="btn-group" role="group" aria-label="Basic example">
@@ -37,7 +37,7 @@
       const container = document.querySelector('.structure');
       const newPara = `
         <div class="form-group">
-          <label for="exampleFormControlTextarea${uniqueId}">Example textarea</label>
+          <label for="exampleFormControlTextarea${uniqueId}">Enter Paragraph</label>
           <textarea class="form-control" name="para${uniqueId}" id="exampleFormControlTextarea${uniqueId}" rows="3"></textarea>
         </div>
       `;
@@ -50,7 +50,7 @@
     const container = document.querySelector('.structure');
     const newImage = `
         <div class="form-group">
-        <label for="exampleFormControlFile${uniqueId}">Example file input</label>
+        <label for="exampleFormControlFile${uniqueId}">Add Image</label>
         <input type="file" name="image${uniqueId}" class="form-control-file" id="exampleFormControlFile${uniqueId}">
         <input style="display:none" type="text" name="image${uniqueId}" class="form-control"> 
         </div>
@@ -65,7 +65,7 @@
     const container = document.querySelector('.structure');
     const newImage = `
         <div class="form-group">
-        <label for="exampleFormControlFile${uniqueId}">Example file input</label>
+        <label for="exampleFormControlFile${uniqueId}">Enter Subheading</label>
         <input type="text" name="sub${uniqueId}" class="form-control">
         </div>
     `;
