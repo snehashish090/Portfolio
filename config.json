@@ -1,7 +1,0 @@
-{
-    "secret_key":"Example Secrreet",
-    "api_url":"http://127.0.0.1:5521/",
-    "database_url":"http://127.0.0.1:5555/",
-    "email":"snehashish.laskar@gmail.com",
-    "password":"snehashish08036"
-}
