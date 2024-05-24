@@ -1,9 +1,302 @@
 {% extends "base.html" %}
-
 {% block head %}
+<style>
+    body, html {
+        height: 100%;
+        font-family: 'Courier New', Courier, monospace;
+        margin: 0;
+    }
 
+    .contain {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .contain .card {
+        position: relative; /* Added to position the delete button */
+        margin: 20px;
+        padding: 20px;
+        background-color: #ecf0f1;
+        color: black;
+        width: 25rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 2s ease, transform 2s ease;
+        border-radius: 5px;
+    }
+
+    .card img {
+        border: 0.1px black solid;
+    }
+
+    .contain .card.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .contain .card:hover {
+        background-color: black !important;
+        color: white;
+        transition: background-color 500ms linear;
+    }
+
+    .contain .card:hover .learn-more {
+        background-color: white;
+        color: black;
+        transition: background-color 500ms linear;
+    }
+
+    .image1 {
+        position: relative;
+        height: 80%;
+        width: 100%;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    .image1::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 80%;
+        width: 100%;
+        background: url("{{ url_for('static', filename='spring-concert.jpeg') }}") center/cover no-repeat;
+        filter: blur(0px);
+        z-index: 1;
+    }
+
+    .text {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        margin: auto;
+        color: white;
+        text-align: center;
+        padding-top: 10%;
+    }
+
+    .text h1 {
+        font-weight: 100;
+        font-size: 40px;
+    }
+
+    .winter-concert {
+        width: 80%;
+        margin-left: 10%;
+        height: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            width: 90%;
+        }
+    }
+
+    .custom-container {
+        margin-top: 50px;
+    }
+
+    .custom-container h1 {
+        text-align: center;
+    }
+
+    .learn-more {
+        background-color: black;
+        color: white;
+        width: 100%;
+    }
+
+    /* Custom modal width */
+    .modal-dialog {
+        max-width: 60%;
+    }
+
+    @media (max-width: 768px) {
+        .modal-dialog {
+            max-width: 90%;
+        }
+    }
+
+    /* Styles for delete button */
+    .delete-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        text-align: center;
+        display: flex;
+    }
+
+    .delete-btn button:first-child{
+        background-color: red;
+        color:white;
+        margin-right: 5px;
+        border-radius: 30px;
+    }
+
+    .delete-btn button:last-child{
+        background-color: black;
+        color:white;
+        margin-right:5px ;
+        border-radius: 30px;
+    }
+
+    .delete-btn:hover button{
+        color: red;
+        background: white !important;
+    }
+
+
+</style>
 {% endblock %}
 
 {% block body %}
+
+<div class="custom-container">
+
+    <h1>My Creative Experiences</h1>
+    <div class="contain">
+
+        {% for i in activities %}
+            <div class="card">
+                {% if session.get('logStatus') %}
+                <div class="delete-btn">
+                    <button type="button" class="btn" onClick= "toDelete({{i['id']}})" data-toggle="modal" data-target="#modal-delete">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                    <button type="button" class="btn" data-toggle="modal" data-target="#modal-edit-{{i['id']}}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </div>
+                   
+                {% endif %}
+                {% if 'url' in i %}
+                <a href="{{i['url']}}"><img src="{{ url_for('static', filename=i['image']) }}" class="card-img-top" alt="..."></a>
+                {% else %}
+                <img src="{{ url_for('static', filename=i['image']) }}" class="card-img-top" alt="...">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title">{{ i['title'] }}</h2>
+                    <p class="card-text">{{ i['description'].replace('\n', '<br>')|safe }}.</p>
+                    <button type="button" class="btn learn-more" data-toggle="modal" data-target="#modal-{{i['id']}}">
+                        Read My Reflection
+                    </button>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-{{i['id']}}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">{{ i['title'] }}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>
+                        {{ i['long-description'].replace('\n', '<br>')|safe }}.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal fade" id="modal-edit-{{i['id']}}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edit Reflection : {{i['id']}}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form class="form" method="POST" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Select Activity</label>
+                                <select class="form-control" id="exampleFormControlSelect1" name="type" required>
+                                  <option>Creativity</option>
+                                  <option>Activity</option>
+                                  <option>Service</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="edit-id" class="form-control" placeholder="Enter ID" value="{{i['id']}}">
+                              </div>
+                            <div class="form-group">
+                              <labe>Title</label>
+                              <input type="text" name="title" class="form-control" placeholder="Enter Ttitle" value="{{i['title']}}">
+                            </div>
+                            <div class="form-group">
+                              <label>Description</label>
+                              <textarea class="form-control" name="description">{{ i['description'].replace('\n', '<br>')|safe }}</textarea>
+                            </div>
+                            <div class="form-group">
+                              <label>Reflection</label>
+                              <textarea class="form-control" name="long-description">{{ i['long-description'].replace('\n', '<br>')|safe }}</textarea>
+                            </div>
+                            <div class="form-group">
+                              <label>Cover Image: {{i['image']}}</label>
+                              <input type="file" name="image" class="form-control-file">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button style="border:1px black solid;" type="submit" name="edit" class="btn">Submit</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+        {% endfor %}
+        <div class="modal fade" id="modal-delete" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Warning!</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h3>
+                        Are You Sure You Want to Delete this Reflection?
+                  </h3>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <form method="POST">
+                    <input type="text" style="display:none" id="id" name="delete-id">
+                    <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+
+<script>
+
+function toDelete(id) {
+    const value=document.getElementById("id");
+    value.value=id
+}
+const songs = document.getElementsByClassName('card');
+var i = 0;
+var speed = 100;
+
+function animatime() {
+    if (i < songs.length) {
+        songs[i].classList.add('show');
+        i++;
+        setTimeout(animatime, speed);
+    }
+}
+
+animatime();
+
+</script>
 
 {% endblock %}
