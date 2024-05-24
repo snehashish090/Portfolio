@@ -87,6 +87,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return wrap
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template("index.html")
@@ -137,7 +138,7 @@ def addProject():
         file = data['image']
 
         if file.filename != "":
-            filename = secure_filename(file.filename)
+            filename = secure_filename(data["id"]+file.filename)
             file.save(os.path.join(path + 'static', filename))
 
             with open(path+".gitignore", "a") as file:
@@ -207,7 +208,7 @@ def blogPost():
                 if file.filename == '':
                     continue
                 if file:
-                    filename = secure_filename(file.filename)
+                    filename = secure_filename(var["id"]+file.filename) 
                     var['structure'][i] = url_for("static", filename=str(filename))
                     file.save(os.path.join(path + 'static', filename))
 
@@ -255,7 +256,7 @@ def editPost(post_id):
                     else:
                         continue
                 if file:
-                    filename = secure_filename(file.filename)
+                    filename = secure_filename(var['id']+file.filename) 
                     var['structure'][i] = url_for("static", filename=str(filename))
                     file.save(os.path.join(path + 'static', filename))
 
@@ -357,7 +358,7 @@ def creativity():
                     index = activities.index(activity)
 
                     if image.filename != "":
-                        filename = secure_filename(image.filename)
+                        filename = secure_filename(id+image.filename)
                         image.save(os.path.join(path +'static', filename))
 
                         with open(path+".gitignore", "a") as file:
@@ -429,7 +430,7 @@ def activity():
                     index = activities.index(activity)
 
                     if image.filename != "":
-                        filename = secure_filename(image.filename)
+                        filename = secure_filename(id+image.filename) + id
                         image.save(os.path.join(path +'static', filename))
 
                         with open(path+".gitignore", "a") as file:
@@ -501,7 +502,7 @@ def service():
                     index = activities.index(activity)
 
                     if image.filename != "":
-                        filename = secure_filename(image.filename)
+                        filename = secure_filename(id+image.filename) 
                         image.save(os.path.join(path +'static', filename))
 
                         with open(path+".gitignore", "a") as file:
@@ -561,7 +562,7 @@ def addActivity():
         file = data['image']
 
         if file.filename != "":
-            filename = secure_filename(file.filename)
+            filename = secure_filename(data["id"]+file.filename)
             file.save(os.path.join(path + 'static', filename))
 
             with open(path+".gitignore", "a") as file:
