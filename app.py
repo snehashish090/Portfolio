@@ -106,7 +106,16 @@ def dev():
 def music():
     with open(path+'data/songs.json', 'r') as file:
         songs = json.load(file)
-    return render_template("music.html", songs=songs)
+    if request.method == 'GET':
+        return render_template("music.html", songs=songs)
+    else:
+        index = int(request.form.get('delete-id'))
+        del songs[index]
+        with open(path+'data/songs.json', 'w') as file:
+            json.dump(songs, file)
+
+        return redirect('/music')
+
 
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
@@ -538,6 +547,8 @@ def service():
 
 
 @app.route("/addActivity", methods=["POST","GET", "DELETE"])
+@login_required
+
 def addActivity():
     with open(path+"data/creativity.json", "r") as file:
         creativity = json.load(file)
@@ -587,7 +598,26 @@ def addActivity():
 
         return redirect('/')
     
+@app.route("/addSong", methods=["POST","GET", "DELETE"])
+@login_required
+def addSong():
+    with open(path+"data/songs.json", "r") as file:
+        songs = json.load(file)
 
+    if request.method == "GET":
+        return render_template("addSong.html")
+    else:
+        data = {
+            "url":request.form.get("url"),
+            "image":request.form.get("image"),
+            "title":request.form.get('title')
+        }
+
+        songs = [data]+songs
+        with open(path+"data/songs.json", "w") as file:
+            json.dump(songs, file, indent=4)
+
+        return redirect('/music')
     
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")
