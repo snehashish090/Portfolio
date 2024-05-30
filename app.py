@@ -381,8 +381,8 @@ def creativity():
 
                     activities[index] = activity
 
-                    if request.form.get("type").lower() != str(request.path)[1:]:
-                        with open(path+f"data/{request.form.get("type").lower()}.json", "w") as file:
+                    if request.form.get('type').lower() != str(request.path)[1:]:
+                        with open(path+f"data/{request.form.get('type').lower()}.json", "w") as file:
                             json.dump(activities, file, indent=4)
                         activities.remove(activity)
                         with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
@@ -453,8 +453,8 @@ def activity():
 
                     activities[index] = activity
 
-                    if request.form.get("type").lower() != str(request.path)[1:]:
-                        with open(path+f"data/{request.form.get("type").lower()}.json", "w") as file:
+                    if request.form.get('type').lower() != str(request.path)[1:]:
+                        with open(path+f"data/{request.form.get('type').lower()}.json", "w") as file:
                             json.dump(activities, file, indent=4)
                         activities.remove(activity)
                         with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
@@ -525,8 +525,8 @@ def service():
 
                     activities[index] = activity
 
-                    if request.form.get("type").lower() != str(request.path)[1:]:
-                        with open(path+f"data/{request.form.get("type").lower()}.json", "w") as file:
+                    if request.form.get('type').lower() != str(request.path)[1:]:
+                        with open(path+f"data/{request.form.get('type').lower()}.json", "w") as file:
                             json.dump(activities, file, indent=4)
                         activities.remove(activity)
                         with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
@@ -550,7 +550,7 @@ def addActivity():
         return render_template("addActivity.html")
     else:
         
-        mode = request.form.get("type").lower()
+        mode = request.form.get('type').lower()
         data = {
             "id":str(random.randint(100000, 1000000)),
             "title":request.form.get('title'),

@@ -131,7 +131,12 @@
                 <div class="card-body">
                     <h2 class="card-title">{{ i['title'] }}</h2>
                     <p class="card-text">{{ i['description'] }}.</p>
+                    {% if i['github'] != ''%}
                     <a href="{{ i['github'] }}" class="btn github"><i class="bi bi-github"></i> Github</a>
+                    {% endif %}
+                    {% if 'url' in i%}
+                    <a href="{{ i['url'] }}" style="margin-top: 20px;" class="btn github"><i class="bi bi-globe"></i> Website</a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
