@@ -19,7 +19,7 @@
             <ul class="list-group">
                 
                 {% for i in blogs %}
-                    <a href="#{{i['id']}}" class="list-group-item list-group-item-action">{{i["title"]}}
+                    <a href="#{{i['id']}}" onclick="toDelete({{i['id']}})" class="list-group-item list-group-item-action">{{i["title"]}}
                         <br>{{i["id"]}}
                     </a>
                 {% endfor %}
@@ -28,12 +28,17 @@
 
         <div class="form-group">
           <label for="exampleFormControlInput1">Enter the ID</label>
-          <input type="text" name="id" class="form-control" id="exampleFormControlInput1" placeholder="Enter the ID">
+          <input type="text" name="id" class="form-control" id="id" placeholder="Enter the ID">
         </div>
         <button style="border:1px black solid;" type="submit" class="btn">Submit</button>
     </form>
 </div>
 
-
+<script>
+function toDelete(id) {
+    const value=document.getElementById("id");
+    value.value=id
+}
+</script>
 {% endblock %}
 
