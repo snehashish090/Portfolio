@@ -96,7 +96,12 @@
 
     @media (max-width: 768px) {
         .card{
-            width:90%;
+            width:100%;
+            margin:none;
+        }
+        .contain{
+            margin:0px;
+            padding: 20px;
         }
     }
     .custom-container{
@@ -111,10 +116,72 @@
         color: white;
         width:100%;
     }
+
+       /* Styles for delete button */
+       .delete-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        text-align: center;
+        display: flex;
+    }
+
+    .delete-btn button:first-child{
+        background-color: red;
+        color:white;
+        margin-right: 5px;
+        border-radius: 30px;
+    }
+
+    .delete-btn button:last-child{
+        background-color: black;
+        color:white;
+        margin-right:5px ;
+        border-radius: 30px;
+    }
+
+    .delete-btn:hover button{
+        color: red;
+        background: white !important;
+    }
+
+    .delete-button {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
 </style>
 {% endblock %}
 
 {% block body %}
+
+<div class="modal fade" id="modal-delete" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Warning!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3>
+                Are You Sure You Want to Delete this Reflection?
+          </h3>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form method="POST">
+            <input type="text" style="display:none" id="id" name="delete-id">
+            <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="custom-container">
 
@@ -123,6 +190,16 @@
 
         {% for i in projects %}
             <div class="card">
+                {% if session.get('logStatus') %}
+                    <div class="delete-btn">
+                        <button type="button" class="btn" onClick= "toDelete({{i['id']}})" data-toggle="modal" data-target="#modal-delete">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                        <button type="button" class="btn" data-toggle="modal" data-target="#modal-edit-{{i['id']}}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    </div>
+                {% endif %}
                 {% if 'url' in i %}
                 <a href="{{i['url']}}"><img src="{{ url_for('static', filename=i['image']) }}" class="card-img-top" alt="..."></a>
                 {% else %}
@@ -131,7 +208,7 @@
                 <div class="card-body">
                     <h2 class="card-title">{{ i['title'] }}</h2>
                     <p class="card-text">{{ i['description'] }}.</p>
-                    {% if i['github'] != ''%}
+                    {% if 'github' in i%}
                     <a href="{{ i['github'] }}" class="btn github"><i class="bi bi-github"></i> Github</a>
                     {% endif %}
                     {% if 'url' in i%}
@@ -139,12 +216,106 @@
                     {% endif %}
                 </div>
             </div>
+            
+            <div class="modal fade" id="modal-edit-{{i['id']}}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edit Reflection : {{i['id']}}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form class="form" method="POST" enctype="multipart/form-data">
+                        <div class="modal-body" id="edit-items">
+                            <div class="form-group">
+                                <input type="text" name="edit-id" class="form-control" placeholder="Enter ID" value="{{i['id']}}">
+                              </div>
+                            <div class="form-group">
+                              <labe>Title</label>
+                              <input type="text" name="title" class="form-control" placeholder="Enter Ttitle" value="{{i['title']}}">
+                            </div>
+                            {% if 'url' in i %}
+                            <div class="form-group">
+                                <labe>Url</label>
+                                <input type="text" name="url" class="form-control" placeholder="Enter Url" value="{{i['url']}}">
+                                <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+                              </div>
+                            {% endif %}
+                            {% if 'github' in i %}
+                              <div class="form-group">
+                                <labe>Github</label>
+                                <input type="text" name="github" class="form-control" placeholder="Enter Github Link" value="{{i['github']}}">
+                                <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                            {% endif %}
+                            <div style="margin-top: 30px;" class="structure-{{i['id']}}"></div>
+
+                            <div class="form-group">
+                              <label>Description</label>
+                              <textarea class="form-control" name="description">{{ i['description'].replace('\n', '<br>')|safe }}</textarea>
+                            </div>
+                            <div class="form-group">
+                              <label>Cover Image: {{i['image']}}</label>
+                              <input type="file" name="image" class="form-control-file">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="addUrl({{i['id']}})">Add url</button>
+                            <button type="button" class="btn btn-secondary" onclick="addGithub({{i['id']}})">Add Github</button>
+                            <button style="border:1px black solid;" type="submit" name="edit" class="btn">Submit</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
         {% endfor %}
     </div>
 </div>
 
 
 <script>
+
+function deleteInput(button) {
+    var formGroup = button.parentElement;
+    formGroup.remove();
+}
+
+function addUrl(id)
+{
+    console.log("called add Url");
+    console.log("structure-"+id);
+    const container = document.querySelector('.structure-'+id);
+    console.log(container);
+
+    const newUrl = `
+        <div class="form-group">
+        <label>Enter url</label>
+        <input type="text" name="url" class="form-control">
+        <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+    </div>
+`;
+    container.insertAdjacentHTML('beforeend', newUrl);
+}
+
+function addGithub(id)
+{
+    const container = document.querySelector('.structure-'+id);
+    const newGithub = `
+        <div class="form-group">
+        <label>Enter Github</label>
+        <input type="text" name="github" class="form-control">
+        <button type="button" class="delete-button" onclick="deleteInput(this)"><i class="bi bi-trash"></i></button>
+    </div>
+`;
+    container.insertAdjacentHTML('beforeend', newGithub);
+}
+function toDelete(id) {
+    const value=document.getElementById("id");
+    value.value=id
+}
+
 const songs = document.getElementsByClassName('card');
 var i = 0;
 var speed = 100;

@@ -100,7 +100,75 @@ def about():
 def dev():
     with open(path+'data/projects.json', 'r') as file:
         projects = json.load(file)
-    return render_template("dev.html", projects=projects)
+    if request.method == 'GET':
+        return render_template("dev.html", projects=projects)
+    else:
+        if "delete" in request.form:
+            id = request.form.get('delete-id')
+            for i in projects:
+                if i['id'] == id:
+                    os.remove(os.path.join(path + 'static', i['image']))
+                    with open(path+".gitignore","r") as file:
+                        lines = file.readlines()
+                        with open(path+".gitignore", "w") as file:
+                            for line in lines:
+                                if i['image'] not in line:
+                                    file.write(line)
+                    projects.remove(i)
+                    with open(path+"data/projects.json", "w") as file:
+                        json.dump(projects, file, indent=4)
+
+            with open(path+"data/projects.json", "w") as file:
+                json.dump(projects, file, indent=4)
+            return redirect('/dev')
+        else:
+            image = request.files.get("image")
+            id = request.form.get("edit-id")
+
+            for project in projects:
+                if project['id'] == id:
+
+                    index = projects.index(project)
+
+                    if image.filename != "":
+                        filename = secure_filename(id+image.filename)
+                        image.save(os.path.join(path +'static', filename))
+
+                        with open(path+".gitignore", "a") as file:
+                            file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
+
+                        old_img = project["image"]
+                        project["image"] = filename
+
+                        os.remove(path+"static/{}".format(old_img))
+                        with open(path+".gitignore","r") as file:
+                            lines = file.readlines()
+                            with open(path+".gitignore", "w") as file:
+                                for line in lines:
+                                    if old_img not in line:
+                                        file.write(line)
+                        
+                    project['id'] = request.form.get("edit-id")
+                    project['title'] = request.form.get("title")
+                    project["description"] = request.form.get("description")
+
+                    if "url" in request.form:
+                        project["url"] = request.form.get("url")
+                    elif "url" not in request.form and "url" in project:
+                        del project["url"]
+
+                    if "github" in request.form:
+                        project["github"] = request.form.get("github")
+                    elif "github" not in request.form and "github" in project:
+                        del project["github"]
+
+                    projects[index] = project
+
+                    with open(path+"data/projects.json", "w") as file:
+                        json.dump(projects, file, indent=4)
+
+            return redirect('/dev')
+        
 
 @app.route('/music', methods=['GET', 'POST'])
 def music():
@@ -122,7 +190,32 @@ def blog():
     with open(path+'data/blogs.json', 'r') as file:
         blogs = json.load(file)
         blogs.reverse()
-    return render_template("blog.html", blogs=blogs)
+
+    if request.method == 'GET':
+        return render_template("blog.html", blogs=blogs)
+    else:
+
+        id = request.form.get('delete-id')
+
+        for i in blogs:
+            if i["id"] == id:
+                for j in i["structure"]:
+                    if "image" in j:
+                        os.remove(path[:-1]+i["structure"][j])
+                    with open(path+".gitignore","r") as file:
+                        lines = file.readlines()
+                        with open(path+".gitignore", "w") as file:
+                            for line in lines:
+                                if i["structure"][j][1:] not in line:
+                                    file.write(line)
+                blogs.remove(i)
+                break
+            
+        with open(path+"data/blogs.json", "w") as file:
+            json.dump(blogs,file, indent=4)
+
+        return redirect("/blog")
+
 
 @app.route('/addProject', methods=['GET','POST'])
 @login_required
@@ -161,33 +254,6 @@ def addProject():
             json.dump(projects, file, indent=4)
 
         return redirect('/dev')
-
-@app.route('/deleteProject', methods=['POST','GET'])
-@login_required
-def deleteProject():
-    with open(path+"data/projects.json", "r") as file:
-        projects = json.load(file)
-    if request.method == 'GET':
-        return render_template("deleteProject.html", projects=projects)
-    else:
-        id = request.form.get('id')
-        for i in projects:
-            if i['id'] == id:
-                os.remove(os.path.join(path + 'static', i['image']))
-                with open(path+".gitignore","r") as file:
-                    lines = file.readlines()
-                    with open(path+".gitignore", "w") as file:
-                        for line in lines:
-                            if i['image'] not in line:
-                                file.write(line)
-                projects.remove(i)
-                with open(path+"data/projects.json", "w") as file:
-                    json.dump(projects, file, indent=4)
-
-        with open(path+"data/projects.json", "w") as file:
-            json.dump(projects, file, indent=4)
-        return redirect('/dev')
-    
 
 @app.route('/blogPost', methods=['GET', 'POST'])
 @login_required
@@ -279,37 +345,6 @@ def editPost(post_id):
         
         return redirect("/blog")
 
-
-@app.route('/deletePost', methods=['GET', 'POST'])
-@login_required
-def delPost():
-    with open(path+'data/blogs.json', 'r') as file:
-        blogs = json.load(file)
-
-    if request.method == 'GET':
-        return render_template("deletePost.html", blogs=blogs)
-    else:
-        id = request.form.get('id')
-
-        for i in blogs:
-            if i["id"] == id:
-                for j in i["structure"]:
-                    if "image" in j:
-                        os.remove(path[:-1]+i["structure"][j])
-                    with open(path+".gitignore","r") as file:
-                        lines = file.readlines()
-                        with open(path+".gitignore", "w") as file:
-                            for line in lines:
-                                if i["structure"][j][1:] not in line:
-                                    file.write(line)
-                blogs.remove(i)
-                break
-            
-        with open(path+"data/blogs.json", "w") as file:
-            json.dump(blogs,file, indent=4)
-
-        return redirect("/blog")
-    
 
 @app.route("/login", methods=["GET", "POST"])
 def login_page():

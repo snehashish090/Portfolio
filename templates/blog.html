@@ -43,10 +43,65 @@
         }
     }
 
+        /* Styles for delete button */
+        .delete-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        text-align: center;
+        display: flex;
+    }
+
+    .delete-btn button:first-child{
+        background-color: red;
+        color:white;
+        margin-right: 5px;
+        border-radius: 30px;
+    }
+
+    .delete-btn button:last-child{
+        background-color: black;
+        color:white;
+        margin-right:5px ;
+        border-radius: 30px;
+    }
+
+    .delete-btn:hover button{
+        color: red;
+        background: white !important;
+    }
+
+
 </style>
 {% endblock %}
 
 {% block body %}
+
+<div class="modal fade" id="modal-delete" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Warning!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3>
+                Are You Sure You Want to Delete this Reflection?
+          </h3>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form method="POST">
+            <input type="text" style="display:none" id="id" name="delete-id">
+            <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div class="blog-container">
 
@@ -62,8 +117,15 @@
     </div>
     <div class="blogs">
         {% if blogs|length > 0 %}
-            {% for i in blogs %}
+            {% for i in blogs %}  
                 <div class="card" id="{{i['id']}}">
+                    {% if session.get('logStatus') %}
+                        <div class="delete-btn">
+                            <button type="button" class="btn" onClick= "toDelete({{i['id']}})" data-toggle="modal" data-target="#modal-delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    {% endif %}
                     <div class="card-header">
                         <h1>{{ i["title"] }}</h1>
                         <p>{{ i["date"] }}</p>
@@ -99,5 +161,11 @@
 
 </div>
 
+<script>
+function toDelete(id) {
+    const value=document.getElementById("id");
+    value.value=id
+}
+</script>
 
 {% endblock %}

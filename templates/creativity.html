@@ -116,12 +116,6 @@
         max-width: 60%;
     }
 
-    @media (max-width: 768px) {
-        .modal-dialog {
-            max-width: 90%;
-        }
-    }
-
     /* Styles for delete button */
     .delete-btn {
         position: absolute;
@@ -148,6 +142,16 @@
     .delete-btn:hover button{
         color: red;
         background: white !important;
+    }
+    @media (max-width: 768px) {
+        .card{
+            width:100%;
+            margin:none;
+        }
+        .contain{
+            margin:0px;
+            padding:10px;
+        }
     }
 
 
@@ -203,53 +207,55 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="modal fade" id="modal-edit-{{i['id']}}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
+            </div>
+            <div class="modal fade" id="modal-edit-{{i['id']}}" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
                   <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Edit Reflection : {{i['id']}}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <form class="form" method="POST" enctype="multipart/form-data">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">Select Activity</label>
-                                <select class="form-control" id="exampleFormControlSelect1" name="type" required>
-                                  <option>Creativity</option>
-                                  <option>Activity</option>
-                                  <option>Service</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="edit-id" class="form-control" placeholder="Enter ID" value="{{i['id']}}">
+                      <div class="modal-header">
+                          <h5 class="modal-title">Edit Reflection : {{i['id']}}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <form class="form" method="POST" action="{{ url_for('your_endpoint') }}" enctype="multipart/form-data">
+                          {{ csrf_token() }}
+                          <div class="modal-body">
+                              <div class="form-group">
+                                  <label for="exampleFormControlSelect1">Select Activity</label>
+                                  <select class="form-control" id="exampleFormControlSelect1" name="type" required>
+                                      <option>Creativity</option>
+                                      <option>Activity</option>
+                                      <option>Service</option>
+                                  </select>
                               </div>
-                            <div class="form-group">
-                              <labe>Title</label>
-                              <input type="text" name="title" class="form-control" placeholder="Enter Ttitle" value="{{i['title']}}">
-                            </div>
-                            <div class="form-group">
-                              <label>Description</label>
-                              <textarea class="form-control" name="description">{{ i['description'].replace('\n', '<br>')|safe }}</textarea>
-                            </div>
-                            <div class="form-group">
-                              <label>Reflection</label>
-                              <textarea class="form-control" name="long-description">{{ i['long-description'].replace('\n', '<br>')|safe }}</textarea>
-                            </div>
-                            <div class="form-group">
-                              <label>Cover Image: {{i['image']}}</label>
-                              <input type="file" name="image" class="form-control-file">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button style="border:1px black solid;" type="submit" name="edit" class="btn">Submit</button>
-                        </div>
-                    </form>
+                              <div class="form-group">
+                                  <input type="text" name="edit-id" class="form-control" placeholder="Enter ID" value="{{i['id']}}">
+                              </div>
+                              <div class="form-group">
+                                  <label>Title</label>
+                                  <input type="text" name="title" class="form-control" placeholder="Enter Title" value="{{i['title']}}">
+                              </div>
+                              <div class="form-group">
+                                  <label>Description</label>
+                                  <textarea class="form-control" name="description">{{ i['description']|safe }}</textarea>
+                              </div>
+                              <div class="form-group">
+                                  <label>Reflection</label>
+                                  <textarea class="form-control" name="long-description">{{ i['long-description']|safe }}</textarea>
+                              </div>
+                              <div class="form-group">
+                                  <label>Cover Image: {{i['image']}}</label>
+                                  <input type="file" name="image" class="form-control-file">
+                              </div>
+                          </div>
+                          <div class="modal-footer">
+                              <button style="border:1px black solid;" type="submit" name="edit" class="btn">Submit</button>
+                          </div>
+                      </form>
                   </div>
-                </div>
               </div>
+          </div>
+          
         {% endfor %}
         <div class="modal fade" id="modal-delete" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
