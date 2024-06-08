@@ -41,14 +41,6 @@
         object-fit: cover;
     }
 
-    @media screen and (max-width: 600px) {
-        .education{
-            width: 100%;
-            margin:auto;
-            padding:20px;
-        }
-    }
-
     .school-link{
         padding:15px;
         background-color: black;
@@ -65,11 +57,86 @@
         transition: background-color 0.5s ease-in-out;
     }
 
+    .personal{
+      width:100%;
+      text-align: center;
+      background-color: #ecf0f1;
+      padding:50px;
+    }
+
+    .pfp{
+      background: url("{{url_for('static', filename='me.jpeg')}}");
+      background-position: center;
+      background-repeat: no-repeat;
+      width:250px;
+      height: 250px;
+      background-size: cover;
+      border-radius: 10px;
+    }
+
+    .custom-container{
+      display: flex;
+      justify-content: center;
+      margin-top:50px;
+      width:90%;
+      margin-left:5%;
+    }
+
+    .about-text{
+      width:50%;
+      margin-left:50px;
+      text-align: left;
+    }
+    @media screen and (max-width: 800px) {
+        .education{
+            width: 100%;
+            margin:auto;
+            padding:20px;
+        }
+        .custom-container{
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+        }
+        .about-text{
+          width: 100%;
+          margin-left: 0;
+        }
+        .pfp{
+          width:80%;
+          margin-right:10%;
+          margin-bottom: 10%;
+
+        }
+    }
+
+    @media screen and (max-width:1000px)
+    {
+      .custom-container{
+        width: 100%;
+        margin: none;
+      }
+    }
+
 </style>
 
 {% endblock %}
 
 {% block body %}
+
+<div class="personal">
+  <h1>About Me</h1>
+  <div class="custom-container">
+    <div class="pfp"></div>
+    <div class="about-text"><p>
+      Hi! I am snehashish laskar. I am 16 years old and I am a student/musician/indie developer. I currently study at Kodaikanal International School pursuing my Ineternational Baccalaureate Diploma. 
+      I was born and brought up in India. Over my childhood, I have lived throughout the country and have experienced multiculturism first hand. During middle school, I picked up skills that have stuck with me;
+      in 6th grade I started learning to play the guitar and have recorded and mixed many <a href="/music">songs</a>; in 8th grade I ventured into programming and fundamentals of programing and computational mechaics. 
+      Since then i have been an indie developer working by my self on multiple <a href="/dev">projects</a>.
+    </p></div>
+  </div>
+
+</div>
 
 <div class="education">
 
@@ -150,10 +217,7 @@
                     <img class="d-block w-100" src="{{url_for('static', filename='lochend.jpg')}}" alt="Second slide">
                   </div>
                   <div class="carousel-item">
-                    <img class="d-block w-100" src="..{{url_for('static', filename='desk.jpg')}}" alt="Third slide">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="..{{url_for('static', filename='manga.jpg')}}" alt="Fourth slide">
+                    <img class="d-block w-100" src="{{url_for('static', filename='manga.jpg')}}" alt="Fourth slide">
                   </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleIndicators2" role="button" data-slide="prev">
