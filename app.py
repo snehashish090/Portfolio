@@ -174,6 +174,8 @@ def dev():
 def music():
     with open(path+'data/songs.json', 'r') as file:
         songs = json.load(file)
+
+        songs = songs[::-1]
     if request.method == 'GET':
         return render_template("music.html", songs=songs)
     else:
