@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .custom-container {
+        margin-left: 10%;
+        margin-right: 10%;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        font-weight: 400;
+        height:"100%",
+
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="custom-container">
+    <h2>Upload a new file</h2>
+    <form method="post" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+</div>
+{% endblock %}

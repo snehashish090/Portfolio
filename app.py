@@ -77,6 +77,9 @@ if not os.path.exists(path+"data/service.json"):
     with open(path+"data/service.json", "w") as file:
         json.dump([], file)
 
+if not os.path.exists(path+"media"):
+    os.mkdir(path+"media")
+
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -174,8 +177,6 @@ def dev():
 def music():
     with open(path+'data/songs.json', 'r') as file:
         songs = json.load(file)
-
-        songs = songs[::-1]
     if request.method == 'GET':
         return render_template("music.html", songs=songs)
     else:
@@ -655,6 +656,42 @@ def addSong():
             json.dump(songs, file, indent=4)
 
         return redirect('/music')
+    
+
+@app.route('/files/<path:filename>')
+def download_file(filename):
+    return send_from_directory(path+"media", filename)
+
+@app.route("/files")
+def file_explorer():
+    files = os.listdir(path+"media")
+    return render_template("media.html", files=files)
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return redirect(url_for('index'))
+    file = request.files['file']
+    if file.filename == '':
+        return redirect(url_for('index'))
+    if file:
+        filename = file.filename
+        file.save(os.path.join(path+"media", filename))
+        return redirect(url_for('index'))
+    
+@app.route('/admin/upload', methods=["GET", "POST"])
+@login_required
+
+def upload_file_admin():
+    return render_template("mediaUpload.html")
+
+@app.route('/delete/<filename>', methods=['GET'])
+def delete_file(filename):
+    try:
+        os.remove(path+"media"+"/"+filename)
+        return redirect("/files")
+    except OSError as e:
+        return f'Error deleting file {filename}: {e}'
     
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")
