@@ -64,7 +64,24 @@
 </div>
 
 <script>
-let uniqueId = 0;
+
+function getMaxId(){
+    const elements = document.querySelectorAll('[id^="exampleFormControl"]');
+    let maxId = 0;
+
+    elements.forEach(element => {
+        // Extract the numeric part of the ID
+        const id = element.id.match(/\d+$/);
+        if (id) {
+            // Update maxId if the current ID is greater
+            maxId = Math.max(maxId, parseInt(id[0]));
+        }
+    });
+
+    return maxId;
+}
+
+let uniqueId = getMaxId()+1;
 
 function addPara() {
     const container = document.querySelector('.structure');
@@ -78,8 +95,6 @@ function addPara() {
     container.insertAdjacentHTML('beforeend', newPara);
     uniqueId++;
 }
-uniqueId = 0;
-
 function addImage() {
 const container = document.querySelector('.structure');
 const newImage = `
@@ -93,8 +108,6 @@ const newImage = `
 container.insertAdjacentHTML('beforeend', newImage);
 uniqueId++;
 }
-
-uniqueId = 0;
 
 function addSubHeading() {
 const container = document.querySelector('.structure');

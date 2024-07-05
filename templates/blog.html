@@ -10,7 +10,8 @@
     }
 
     .blogs {
-        width: 80%;
+        width: 1000px;
+        margin: auto;
         padding: 30px;
     }
 
@@ -26,13 +27,19 @@
 
     .card{
         margin-top: 50px;
+        border: none;
+    }
+
+    .card-header{
+        border-bottom: 2px solid #bdc3c7;
+        background-color: white;
     }
 
     .card:first-child{
         margin-top: 0;
     }
     
-    @media (max-width: 768px) {
+    @media (max-width: 800px) {
         .blog-container {
             flex-direction: column;
         }
@@ -105,16 +112,7 @@
 
 <div class="blog-container">
 
-    <div class="list">
-        <ul class="list-group">
-            
-            {% for i in blogs %}
-                <a href="#{{i['id']}}" class="list-group-item list-group-item-action">{{i["title"]}}
-                    <br>{{i["date"]}}
-                </a>
-            {% endfor %}
-        </ul>
-    </div>
+
     <div class="blogs">
         {% if blogs|length > 0 %}
             {% for i in blogs %}  

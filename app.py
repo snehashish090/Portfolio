@@ -99,6 +99,55 @@ def index():
 def about():
     return render_template("about.html")
 
+
+        
+
+
+
+        
+"""
+
+DEVELOPER RELATED
+
+"""
+@app.route('/addProject', methods=['GET','POST'])
+@login_required
+def addProject():
+    with open(path+"data/projects.json", "r") as file:
+        projects = json.load(file)
+
+    if request.method == 'GET':
+        return render_template("addProject.html")
+    else:
+        data = {
+            "id":str(random.randint(100000, 1000000)),
+            "title":request.form.get('title'),
+            "description":request.form.get('description'),
+            "github":request.form.get('github'),
+            "image":request.files.get('image'),
+        }
+
+        if "url" in request.form:
+            data["url"] = request.form.get('url')
+
+        file = data['image']
+
+        if file.filename != "":
+            filename = secure_filename(data["id"]+file.filename)
+            file.save(os.path.join(path + 'static', filename))
+
+            with open(path+".gitignore", "a") as file:
+                file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
+
+            data['image'] = filename
+        
+        projects.append(data)
+
+        with open(path+"data/projects.json", "w") as file:
+            json.dump(projects, file, indent=4)
+
+        return redirect('/dev')
+    
 @app.route('/dev', methods=['GET', 'POST'])
 def dev():
     with open(path+'data/projects.json', 'r') as file:
@@ -172,30 +221,27 @@ def dev():
 
             return redirect('/dev')
         
+"""
 
-@app.route('/music', methods=['GET', 'POST'])
-def music():
-    with open(path+'data/songs.json', 'r') as file:
-        songs = json.load(file)
-    if request.method == 'GET':
-        return render_template("music.html", songs=songs)
-    else:
-        index = int(request.form.get('delete-id'))
-        del songs[index]
-        with open(path+'data/songs.json', 'w') as file:
-            json.dump(songs, file)
+BLOG RELATED
 
-        return redirect('/music')
+"""
 
-
-@app.route('/blog', methods=['GET', 'POST'])
-def blog():
+@app.route('/blog/<id>', methods=['GET', 'POST'])
+def blogSpecific(id):
     with open(path+'data/blogs.json', 'r') as file:
         blogs = json.load(file)
         blogs.reverse()
 
+    blog = []
+
+    for i in blogs:
+        if i["id"] == id:
+            blog.append(i)
+            break
+
     if request.method == 'GET':
-        return render_template("blog.html", blogs=blogs)
+        return render_template("blog.html", blogs=blog)
     else:
 
         id = request.form.get('delete-id')
@@ -218,45 +264,16 @@ def blog():
             json.dump(blogs,file, indent=4)
 
         return redirect("/blog")
+    
 
 
-@app.route('/addProject', methods=['GET','POST'])
-@login_required
-def addProject():
-    with open(path+"data/projects.json", "r") as file:
-        projects = json.load(file)
+@app.route('/blog', methods=["GET"])
+def blogRouter():
+    with open(path+'data/blogs.json', 'r') as file:
+        blogs = json.load(file)
+        blogs.reverse()
 
-    if request.method == 'GET':
-        return render_template("addProject.html")
-    else:
-        data = {
-            "id":str(random.randint(100000, 1000000)),
-            "title":request.form.get('title'),
-            "description":request.form.get('description'),
-            "github":request.form.get('github'),
-            "image":request.files.get('image'),
-        }
-
-        if "url" in request.form:
-            data["url"] = request.form.get('url')
-
-        file = data['image']
-
-        if file.filename != "":
-            filename = secure_filename(data["id"]+file.filename)
-            file.save(os.path.join(path + 'static', filename))
-
-            with open(path+".gitignore", "a") as file:
-                file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
-
-            data['image'] = filename
-        
-        projects.append(data)
-
-        with open(path+"data/projects.json", "w") as file:
-            json.dump(projects, file, indent=4)
-
-        return redirect('/dev')
+    return render_template("blog-router.html", blogs=blogs)
 
 @app.route('/blogPost', methods=['GET', 'POST'])
 @login_required
@@ -321,7 +338,8 @@ def editPost(post_id):
             "date": request.form.get('date'),
             "structure": {}
         }
-
+        
+    
         for i in request.form:
             if i!= "title" and i!= "date" and "image" not in i:
                 var["structure"][i] = request.form.get(i)
@@ -340,14 +358,19 @@ def editPost(post_id):
 
                     with open(path+".gitignore", "a") as file:
                         file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
-                        
+
         blogs[blogs.index(myblog)] = var
 
         with open(path + "data/blogs.json", "w") as file:
             json.dump(blogs, file, indent=4)
-        
+
         return redirect("/blog")
 
+"""
+
+AUTHENTICATION RELATED
+
+"""
 
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
@@ -367,6 +390,14 @@ def login_page():
 def logout_page():
     session["logStatus"] = False
     return redirect("/")
+
+
+
+
+
+"""
+CREATIVITY PAGE RELATED
+"""
 
 @app.route("/creativity", methods=["GET", "POST"])
 def creativity():
@@ -440,78 +471,17 @@ def creativity():
 
     return redirect('/creativity')
     
-@app.route("/activity", methods=["GET", "POST"])
-def activity():
-    with open(path+"data/activity.json", "r") as file:
-        activities = json.load(file)
-
-    if request.method == "GET":
-        return render_template("activity.html", activities=activities)
-    else:
-        
-        if "edit" not in request.form:
-            for activity in activities:
-                if activity["id"] == request.form.get("delete-id"):
-                    img = activity["image"]
-
-                    os.remove(path+f"static/{img}")
-                    with open(path+".gitignore","r") as file:
-                        lines = file.readlines()
-                        with open(path+".gitignore", "w") as file:
-                            for line in lines:
-                                if activity['image'] not in line:
-                                    file.write(line)
-                    
-                    activities.remove(activity)
-                    with open(path+"data/activity.json", "w") as file:
-                        json.dump(activities, file, indent=4)
-        else:
-            image = request.files.get("image")
-            id = request.form.get("edit-id")
-
-            for activity in activities:
-                print(activity['id'], id)
-                if activity['id'] == id:
 
 
-                    index = activities.index(activity)
-
-                    if image.filename != "":
-                        filename = secure_filename(id+image.filename) + id
-                        image.save(os.path.join(path +'static', filename))
-
-                        with open(path+".gitignore", "a") as file:
-                            file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
-                        
-                        old_img = activity["image"]
-                        activity["image"] = filename
-
-                        os.remove(path+"static/{}".format(old_img))
-                        with open(path+".gitignore","r") as file:
-                            lines = file.readlines()
-                            with open(path+".gitignore", "w") as file:
-                                for line in lines:
-                                    if old_img not in line:
-                                        file.write(line)
-
-                    activity["title"] = request.form.get("title")
-                    activity["description"] = request.form.get("description")
-                    activity["long-description"] = request.form.get("long-description")
-
-                    activities[index] = activity
-
-                    if request.form.get('type').lower() != str(request.path)[1:]:
-                        with open(path+f"data/{request.form.get('type').lower()}.json", "w") as file:
-                            json.dump(activities, file, indent=4)
-                        activities.remove(activity)
-                        with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
-                            json.dump(activities, file, indent=4)
-                    else:
-                        with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
-                            json.dump(activities, file, indent=4)
-    return redirect('/activity')
 
 
+
+"""
+
+SERVICE PAGE RELATED
+
+
+"""
 @app.route("/service", methods=["GET", "POST"])
 def service():
     with open(path+"data/service.json", "r") as file:
@@ -584,6 +554,82 @@ def service():
     return redirect('/service')
 
 
+"""
+
+ACTIVITY PAGE RELATED
+
+"""
+@app.route("/activity", methods=["GET", "POST"])
+def activity():
+    with open(path+"data/activity.json", "r") as file:
+        activities = json.load(file)
+
+    if request.method == "GET":
+        return render_template("activity.html", activities=activities)
+    else:
+        
+        if "edit" not in request.form:
+            for activity in activities:
+                if activity["id"] == request.form.get("delete-id"):
+                    img = activity["image"]
+
+                    os.remove(path+f"static/{img}")
+                    with open(path+".gitignore","r") as file:
+                        lines = file.readlines()
+                        with open(path+".gitignore", "w") as file:
+                            for line in lines:
+                                if activity['image'] not in line:
+                                    file.write(line)
+                    
+                    activities.remove(activity)
+                    with open(path+"data/activity.json", "w") as file:
+                        json.dump(activities, file, indent=4)
+        else:
+            image = request.files.get("image")
+            id = request.form.get("edit-id")
+
+            for activity in activities:
+                print(activity['id'], id)
+                if activity['id'] == id:
+
+
+                    index = activities.index(activity)
+
+                    if image.filename != "":
+                        filename = secure_filename(id+image.filename) + id
+                        image.save(os.path.join(path +'static', filename))
+
+                        with open(path+".gitignore", "a") as file:
+                            file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
+                        
+                        old_img = activity["image"]
+                        activity["image"] = filename
+
+                        os.remove(path+"static/{}".format(old_img))
+                        with open(path+".gitignore","r") as file:
+                            lines = file.readlines()
+                            with open(path+".gitignore", "w") as file:
+                                for line in lines:
+                                    if old_img not in line:
+                                        file.write(line)
+
+                    activity["title"] = request.form.get("title")
+                    activity["description"] = request.form.get("description")
+                    activity["long-description"] = request.form.get("long-description")
+
+                    activities[index] = activity
+
+                    if request.form.get('type').lower() != str(request.path)[1:]:
+                        with open(path+f"data/{request.form.get('type').lower()}.json", "w") as file:
+                            json.dump(activities, file, indent=4)
+                        activities.remove(activity)
+                        with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
+                            json.dump(activities, file, indent=4)
+                    else:
+                        with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
+                            json.dump(activities, file, indent=4)
+    return redirect('/activity')
+
 @app.route("/addActivity", methods=["POST","GET", "DELETE"])
 @login_required
 
@@ -636,6 +682,33 @@ def addActivity():
 
         return redirect('/')
     
+
+
+
+
+
+"""
+
+RELTAED TO MUSIC PAGE
+
+"""    
+
+
+@app.route('/music', methods=['GET', 'POST'])
+def music():
+    with open(path+'data/songs.json', 'r') as file:
+        songs = json.load(file)
+    if request.method == 'GET':
+        return render_template("music.html", songs=songs)
+    else:
+        index = int(request.form.get('delete-id'))
+        del songs[index]
+        with open(path+'data/songs.json', 'w') as file:
+            json.dump(songs, file)
+
+        return redirect('/music')
+    
+
 @app.route("/addSong", methods=["POST","GET", "DELETE"])
 @login_required
 def addSong():
@@ -656,7 +729,13 @@ def addSong():
             json.dump(songs, file, indent=4)
 
         return redirect('/music')
-    
+
+
+"""
+
+RELTAED TO PUBLIC FILE ARCHIVE FEATURE
+
+"""
 
 @app.route('/files/<path:filename>')
 def download_file(filename):
@@ -668,6 +747,7 @@ def file_explorer():
     return render_template("media.html", files=files)
 
 @app.route('/upload', methods=['POST'])
+@login_required
 def upload_file():
     if 'file' not in request.files:
         return redirect(url_for('index'))
@@ -681,11 +761,12 @@ def upload_file():
     
 @app.route('/admin/upload', methods=["GET", "POST"])
 @login_required
-
 def upload_file_admin():
     return render_template("mediaUpload.html")
 
+# Route to delete a file from the file archive
 @app.route('/delete/<filename>', methods=['GET'])
+@login_required
 def delete_file(filename):
     try:
         os.remove(path+"media"+"/"+filename)
@@ -693,5 +774,6 @@ def delete_file(filename):
     except OSError as e:
         return f'Error deleting file {filename}: {e}'
     
+
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")

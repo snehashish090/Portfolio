@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<style>
+    .blog-container {
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+    }
+
+    .list {
+        width:80%;
+        padding: 30px;
+        align-self: center;
+        margin-left: 10%;
+    }
+
+    @media (max-width: 768px) {
+        
+        .list {
+            width: 100%;
+            padding: 10px;
+        }
+    }
+
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .list-group-item{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .list-group-item p{
+        justify-content: center;
+        text-align: center;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+
+<div class="blog-container">
+    <div class="list">
+        <h1 style="
+            text-align: center;
+            padding-bottom: 30px;
+            ">My Blog Posts</h1>
+        <ul class="list-group">
+            
+            {% for i in blogs %}
+                <a href="/blog/{{i['id']}}" class="list-group-item list-group-item-action">
+
+                    <h3>{{i["title"]}}</h3>
+                    <p>{{i["date"]}}</p>
+                    
+                </a>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
