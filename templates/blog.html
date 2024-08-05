@@ -132,7 +132,7 @@
                         <blockquote class="blockquote mb-0">
                             {% for j in i["structure"] %}
                                 {% if "para" in j %}
-                                    <p>{{ i["structure"][j] }}</p>
+                                    <p>{{ i["structure"][j] }}.replace('\n', '<br>')|safe</p>
                                 {% elif "sub" in j %}
                                     <h3>{{ i["structure"][j] }}</h3>
                                 {% elif "image" in j %}
