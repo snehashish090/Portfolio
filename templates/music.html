@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block head %}
-
 <style>
     body, html {
         height: 100%;
         margin: 0;
+        display: flex;
+        flex-direction: column;
     }
 
     .contain {
@@ -37,7 +38,7 @@
 
     .image1 {
         position: relative;
-        height: 80%;
+        height: 300px;
         width: 100%;
         overflow: hidden;
         margin-top: 20px;
@@ -48,7 +49,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        height: 80%;
+        height: 100%;
         width: 100%;
         background: url("{{ url_for('static', filename='spring-concert.jpeg') }}") center/cover no-repeat;
         filter: blur(0px);
@@ -70,13 +71,12 @@
         font-size: 40px;
     }
 
-    .winter-concert{
-        width:80%;
+    .winter-concert {
+        width: 80%;
         margin-left: 10%;
-        height:100%;
+        height: 100%;
     }
 
-    /* Styles for delete button */
     .delete-btn {
         position: absolute;
         top: 10px;
@@ -85,128 +85,166 @@
         display: flex;
     }
 
-    .delete-btn button:first-child{
+    .delete-btn button:first-child {
         background-color: red;
-        color:white;
+        color: white;
         margin-right: 5px;
         border-radius: 30px;
     }
 
-    .delete-btn button:last-child{
+    .delete-btn button:last-child {
         background-color: black;
-        color:white;
-        margin-right:5px ;
+        color: white;
+        margin-right: 5px;
         border-radius: 30px;
     }
 
-    .delete-btn:hover button{
+    .delete-btn:hover button {
         color: red;
         background: white !important;
     }
 
+    .images-portfolio {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        padding: 20px;/* Add margin to prevent overlap with footer */
+        background: black;
+    }
 
+    .images-portfolio .card {
+        width: 100%;
+        max-width: 560px;
+        background-color: black;
+    }
+    .breaker{
+        text-align: center;
+        padding:50px;
+        color:white;
+        background-color: black;
+        
+    }
+
+    .breaker h1{
+        font-size: 40px;
+    }
+    footer {
+        margin-top: auto;
+    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="modal fade" id="modal-delete" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Warning!</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Warning!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3>Are You Sure You Want to Delete this Reflection?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form method="POST">
+                    <input type="text" style="display:none" id="id" name="delete-id">
+                    <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-          <h3>
-                Are You Sure You Want to Delete this Reflection?
-          </h3>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <form method="POST">
-            <input type="text" style="display:none" id="id" name="delete-id">
-            <button type="submit" name="delete" class="btn btn-danger">Delete</button>
-          </form>
-      </div>
     </div>
-  </div>
 </div>
 
 <div class="contain">
     {% for i in songs %}
-        <div class="card" style="width: 18rem;">
-            {% if session.get('logStatus') %}
-                <div class="delete-btn">
-                    <button type="button" class="btn" onClick= "toDelete({{songs.index(i)}})" data-toggle="modal" data-target="#modal-delete">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
-            {% endif %}
-            <a href="{{ i['url'] }}">
-                <img src="{{ i['image'] }}" class="card-img-top" alt="...">
-            </a>
-            <div class="card-body">
-                <h5 style="text-align: center" class="card-text">{{ i['title'] }}</h5>
-            </div>
+    <div class="card" style="width: 18rem;">
+        {% if session.get('logStatus') %}
+        <div class="delete-btn">
+            <button type="button" class="btn" onClick="toDelete({{songs.index(i)}})" data-toggle="modal" data-target="#modal-delete">
+                <i class="bi bi-trash"></i>
+            </button>
         </div>
+        {% endif %}
+        <a href="{{ i['url'] }}">
+            <img src="{{ i['image'] }}" class="card-img-top" alt="...">
+        </a>
+        <div class="card-body">
+            <h5 style="text-align: center" class="card-text">{{ i['title'] }}</h5>
+        </div>
+    </div>
     {% endfor %}
-    
 </div>
-
 
 <div class="image1">
     <div class="text">
-        <h1 id="intro-title"></h1>
+        <h1 id="intro-title"> Music Video</h1>
     </div>
 </div>
 
-<div class="images-portfolio" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; height: 100vh;">
-    <div class="card" style="width: auto;">
+<div class="breaker">
+    <h1>Music Videos</h1>
+</div>
+
+<div class="images-portfolio">
+    <div class="card">
         <div class="card-body">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/CGLIGhIZSx4?si=7qFKNPhe4l8qDrYV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <h5 style="text-align: center" class="card-text"></h5>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/CGLIGhIZSx4?si=7qFKNPhe4l8qDrYV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
     </div>
 
-    <div class="card" style="width: auto;">
+    <div class="card">
         <div class="card-body">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/rNsiyqtieWo?si=eo4xnR6cFpMbbmwC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <h5 style="text-align: center" class="card-text"></h5>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/rNsiyqtieWo?si=eo4xnR6cFpMbbmwC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
     </div>
 
-    <div class="card" style="width: auto;">
+    <div class="card">
         <div class="card-body">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/2wo7bGFAAZs?si=ZywUtFUdmPFcRrln" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <h5 style="text-align: center" class="card-text"></h5>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/2wo7bGFAAZs?si=ZywUtFUdmPFcRrln" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
     </div>
 
-    <div class="card" style="width: auto;">
+    <div class="card">
         <div class="card-body">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/upfklvLhAj8?si=a_uoar-J2u3yqXLe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <h5 style="text-align: center" class="card-text"></h5>
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/upfklvLhAj8?si=a_uoar-J2u3yqXLe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/SlewZUFtRoc?si=zF72C92QUudbRAyA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/rjBY7ETj-L4?si=2_ibCUjefOm0ZI1g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/dic6dEbF4p0?si=1x22vyA2WRwqbk2x&amp;start=3267" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/SShj6S8NgC8?si=wQlmMZbvjARHXRT3&amp;" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
     </div>
 </div>
 
-
-<iframe class="winter-concert" src="https://www.youtube.com/embed/dic6dEbF4p0?si=1x22vyA2WRwqbk2x&amp;start=3267" 
-title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-<iframe class="winter-concert" src="https://www.youtube.com/embed/SShj6S8NgC8?si=wQlmMZbvjARHXRT3&amp;" 
-title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
- referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
+<button onclick="topFunction()" id="myBtn" class="scroll-up-btn">^</button>
 
 <script>
-
 function toDelete(id) {
-    const value=document.getElementById("id");
-    value.value=id
+    const value = document.getElementById("id");
+    value.value = id;
 }
 
 const songs = document.getElementsByClassName('card');
@@ -224,7 +262,7 @@ function animatime() {
 animatime();
 
 var j = 0;
-var txt = "Videos Of Live Performances";
+var txt = "Music Videos";
 var typingSpeed = 50;
 
 function typeWriter() {
@@ -236,5 +274,22 @@ function typeWriter() {
 }
 
 typeWriter();
+
+let mybutton = document.getElementById("myBtn");
+
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+    } else {
+        mybutton.style.display = "none";
+    }
+}
+
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
 </script>
 {% endblock %}
