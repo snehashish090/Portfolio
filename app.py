@@ -420,7 +420,17 @@ def creativity():
                     with open(path+"data/creativity.json", "w") as file:
                         json.dump(activities, file, indent=4)
         else:
+
             image = request.files.get("image")
+            
+            carousel_images = request.files.getlist('carousel')
+
+            to_delete = []
+
+            for i in request.form:
+                if request.form.get(i) == "on":
+                    to_delete.append(i)
+
             id = request.form.get("edit-id")
 
             for activity in activities:
@@ -447,6 +457,30 @@ def creativity():
                                 for line in lines:
                                     if old_img not in line:
                                         file.write(line)
+
+                    for image in to_delete:
+                        os.remove(path+"static/{}".format(image))
+                        activity["carousel"].remove(image)
+                        with open(path+".gitignore","r") as file:
+                            lines = file.readlines()
+                            with open(path+".gitignore", "w") as file:
+                                for line in lines:
+                                    if image not in line:
+                                        file.write(line)
+
+                    for image in carousel_images:
+                        if image.filename != "":
+                            filename = secure_filename(id+image.filename)
+                            image.save(os.path.join(path +'static', filename))
+
+                            with open(path+".gitignore", "a") as file:
+                                file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
+                            
+                            if 'carousel' not in activity:
+                                activity['carousel'] = []
+
+                            activity['carousel'].append(filename)
+
 
                     activity["title"] = request.form.get("title")
                     activity["description"] = request.form.get("description")
