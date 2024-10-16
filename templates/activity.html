@@ -199,6 +199,12 @@
                       <p>
                         {{ i['long-description'].replace('\n', '<br>')|safe }}.
                       </p>
+
+                      {% if 'carousel' in i %}
+                        {% for j in i['carousel']%}
+                            <img style="max-width: 50%;margin-left: 25%;" src="{{url_for('static', filename=j)}}" alt="">
+                        {% endfor %}
+                      {% endif %}
                     </div>
                   </div>
                 </div>
@@ -240,7 +246,19 @@
                             <div class="form-group">
                               <label>Cover Image: {{i['image']}}</label>
                               <input type="file" name="image" class="form-control-file">
-                            </div>
+                          </div>
+                            <div class="form-group">
+                              <label>Gallery Images</label>
+                              {% if 'carousel' in i %}
+                                  {% for j in i['carousel']%}
+                                      <p>{{j}}</p>
+                                      <img style="max-width: 50px;margin-left: 25%;" src="{{url_for('static', filename=j)}}" alt="">
+                                      <input type="checkbox" name = '{{j}}' aria-label="Checkbox for following text input">
+                                      <p style="color:red">Check the check box to delete</p>
+                                  {% endfor %}
+                              {% endif %}
+                              <input type="file" name="carousel" class="form-control-file" multiple>
+                          </div>
                         </div>
                         <div class="modal-footer">
                             <button style="border:1px black solid;" type="submit" name="edit" class="btn">Submit</button>

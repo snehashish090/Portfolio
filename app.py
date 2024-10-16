@@ -505,65 +505,85 @@ def creativity():
     return redirect('/creativity')
 
 
-"""
-
-SERVICE PAGE RELATED
-
-
-"""
 @app.route("/service", methods=["GET", "POST"])
 def service():
-    with open(path+"data/service.json", "r") as file:
+    with open(path + "data/service.json", "r") as file:
         activities = json.load(file)
 
     if request.method == "GET":
         return render_template("service.html", activities=activities)
     else:
-
         if "edit" not in request.form:
             for activity in activities:
                 if activity["id"] == request.form.get("delete-id"):
                     img = activity["image"]
 
-                    os.remove(path+f"static/{img}")
-                    with open(path+".gitignore","r") as file:
+                    os.remove(path + f"static/{img}")
+                    with open(path + ".gitignore", "r") as file:
                         lines = file.readlines()
-                        with open(path+".gitignore", "w") as file:
+                        with open(path + ".gitignore", "w") as file:
                             for line in lines:
-                                if activity['image'] not in line:
+                                if activity["image"] not in line:
                                     file.write(line)
 
                     activities.remove(activity)
-                    with open(path+"data/service.json", "w") as file:
+                    with open(path + "data/service.json", "w") as file:
                         json.dump(activities, file, indent=4)
         else:
             image = request.files.get("image")
+            carousel_images = request.files.getlist("carousel")
+            to_delete = []
+
+            for i in request.form:
+                if request.form.get(i) == "on":
+                    to_delete.append(i)
+
             id = request.form.get("edit-id")
 
             for activity in activities:
-                print(activity['id'], id)
-                if activity['id'] == id:
-
-
+                if activity["id"] == id:
                     index = activities.index(activity)
 
                     if image.filename != "":
-                        filename = secure_filename(id+image.filename)
-                        image.save(os.path.join(path +'static', filename))
+                        filename = secure_filename(id + image.filename)
+                        image.save(os.path.join(path + "static", filename))
 
-                        with open(path+".gitignore", "a") as file:
-                            file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
+                        with open(path + ".gitignore", "a") as file:
+                            file.write("\n" + str(url_for("static", filename=str(filename)))[1:])
 
                         old_img = activity["image"]
                         activity["image"] = filename
 
-                        os.remove(path+"static/{}".format(old_img))
-                        with open(path+".gitignore","r") as file:
+                        os.remove(path + "static/{}".format(old_img))
+                        with open(path + ".gitignore", "r") as file:
                             lines = file.readlines()
-                            with open(path+".gitignore", "w") as file:
+                            with open(path + ".gitignore", "w") as file:
                                 for line in lines:
                                     if old_img not in line:
                                         file.write(line)
+
+                    for image in to_delete:
+                        os.remove(path + "static/{}".format(image))
+                        activity["carousel"].remove(image)
+                        with open(path + ".gitignore", "r") as file:
+                            lines = file.readlines()
+                            with open(path + ".gitignore", "w") as file:
+                                for line in lines:
+                                    if image not in line:
+                                        file.write(line)
+
+                    for image in carousel_images:
+                        if image.filename != "":
+                            filename = secure_filename(id + image.filename)
+                            image.save(os.path.join(path + "static", filename))
+
+                            with open(path + ".gitignore", "a") as file:
+                                file.write("\n" + str(url_for("static", filename=str(filename)))[1:])
+
+                            if "carousel" not in activity:
+                                activity["carousel"] = []
+
+                            activity["carousel"].append(filename)
 
                     activity["title"] = request.form.get("title")
                     activity["description"] = request.form.get("description")
@@ -571,80 +591,101 @@ def service():
 
                     activities[index] = activity
 
-                    if request.form.get('type').lower() != str(request.path)[1:]:
-                        with open(path+f"data/{request.form.get('type').lower()}.json", "r") as file2:
-                            exisiting = json.load(file2)
-                            exisiting.append(activity)
-                            with open(path+f"data/{request.form.get('type').lower()}.json", "w") as file:
-                                json.dump(exisiting, file, indent=4)
+                    if request.form.get("type").lower() != str(request.path)[1:]:
+                        with open(path + f"data/{request.form.get('type').lower()}.json", "r") as file2:
+                            existing = json.load(file2)
+                            existing.append(activity)
+                            with open(path + f"data/{request.form.get('type').lower()}.json", "w") as file:
+                                json.dump(existing, file, indent=4)
 
                         activities.remove(activity)
-                        with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
+                        with open(path + f"data/{str(request.path)[1:]}.json", "w") as file:
                             json.dump(activities, file, indent=4)
                     else:
-                        with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
+                        with open(path + f"data/{str(request.path)[1:]}.json", "w") as file:
                             json.dump(activities, file, indent=4)
-    return redirect('/service')
 
+    return redirect("/service")
 
-"""
-
-ACTIVITY PAGE RELATED
-
-"""
 @app.route("/activity", methods=["GET", "POST"])
 def activity():
-    with open(path+"data/activity.json", "r") as file:
+    with open(path + "data/activity.json", "r") as file:
         activities = json.load(file)
 
     if request.method == "GET":
         return render_template("activity.html", activities=activities)
     else:
-
         if "edit" not in request.form:
             for activity in activities:
                 if activity["id"] == request.form.get("delete-id"):
                     img = activity["image"]
 
-                    os.remove(path+f"static/{img}")
-                    with open(path+".gitignore","r") as file:
+                    os.remove(path + f"static/{img}")
+                    with open(path + ".gitignore", "r") as file:
                         lines = file.readlines()
-                        with open(path+".gitignore", "w") as file:
+                        with open(path + ".gitignore", "w") as file:
                             for line in lines:
-                                if activity['image'] not in line:
+                                if activity["image"] not in line:
                                     file.write(line)
 
                     activities.remove(activity)
-                    with open(path+"data/activity.json", "w") as file:
+                    with open(path + "data/activity.json", "w") as file:
                         json.dump(activities, file, indent=4)
         else:
             image = request.files.get("image")
+            carousel_images = request.files.getlist("carousel")
+            to_delete = []
+
+            for i in request.form:
+                if request.form.get(i) == "on":
+                    to_delete.append(i)
+
             id = request.form.get("edit-id")
 
             for activity in activities:
-                print(activity['id'], id)
-                if activity['id'] == id:
-
-
+                if activity["id"] == id:
                     index = activities.index(activity)
 
                     if image.filename != "":
-                        filename = secure_filename(id+image.filename) + id
-                        image.save(os.path.join(path +'static', filename))
+                        filename = secure_filename(id + image.filename)
+                        image.save(os.path.join(path + "static", filename))
 
-                        with open(path+".gitignore", "a") as file:
-                            file.write("\n"+str(url_for("static", filename=str(filename)))[1:])
+                        with open(path + ".gitignore", "a") as file:
+                            file.write("\n" + str(url_for("static", filename=str(filename)))[1:])
 
                         old_img = activity["image"]
                         activity["image"] = filename
 
-                        os.remove(path+"static/{}".format(old_img))
-                        with open(path+".gitignore","r") as file:
+                        os.remove(path + "static/{}".format(old_img))
+                        with open(path + ".gitignore", "r") as file:
                             lines = file.readlines()
-                            with open(path+".gitignore", "w") as file:
+                            with open(path + ".gitignore", "w") as file:
                                 for line in lines:
                                     if old_img not in line:
                                         file.write(line)
+
+                    for image in to_delete:
+                        os.remove(path + "static/{}".format(image))
+                        activity["carousel"].remove(image)
+                        with open(path + ".gitignore", "r") as file:
+                            lines = file.readlines()
+                            with open(path + ".gitignore", "w") as file:
+                                for line in lines:
+                                    if image not in line:
+                                        file.write(line)
+
+                    for image in carousel_images:
+                        if image.filename != "":
+                            filename = secure_filename(id + image.filename)
+                            image.save(os.path.join(path + "static", filename))
+
+                            with open(path + ".gitignore", "a") as file:
+                                file.write("\n" + str(url_for("static", filename=str(filename)))[1:])
+
+                            if "carousel" not in activity:
+                                activity["carousel"] = []
+
+                            activity["carousel"].append(filename)
 
                     activity["title"] = request.form.get("title")
                     activity["description"] = request.form.get("description")
@@ -652,20 +693,22 @@ def activity():
 
                     activities[index] = activity
 
-                    if request.form.get('type').lower() != str(request.path)[1:]:
-                        with open(path+f"data/{request.form.get('type').lower()}.json", "r") as file2:
-                            exisiting = json.load(file2)
-                            exisiting.append(activity)
-                            with open(path+f"data/{request.form.get('type').lower()}.json", "w") as file:
-                                json.dump(exisiting, file, indent=4)
+                    if request.form.get("type").lower() != str(request.path)[1:]:
+                        with open(path + f"data/{request.form.get('type').lower()}.json", "r") as file2:
+                            existing = json.load(file2)
+                            existing.append(activity)
+                            with open(path + f"data/{request.form.get('type').lower()}.json", "w") as file:
+                                json.dump(existing, file, indent=4)
 
                         activities.remove(activity)
-                        with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
+                        with open(path + f"data/{str(request.path)[1:]}.json", "w") as file:
                             json.dump(activities, file, indent=4)
                     else:
-                        with open(path+f"data/{str(request.path)[1:]}.json", "w") as file:
+                        with open(path + f"data/{str(request.path)[1:]}.json", "w") as file:
                             json.dump(activities, file, indent=4)
-    return redirect('/activity')
+
+    return redirect("/activity")
+
 
 @app.route("/addActivity", methods=["POST","GET", "DELETE"])
 @login_required
