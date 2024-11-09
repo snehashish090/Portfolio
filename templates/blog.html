@@ -1,5 +1,9 @@
 {% extends "base.html" %}
-
+{% block title %}
+    {% if blogs|length > 0 %}
+        {{blogs[0]["title"]}}
+    {% endif %}
+{% endblock %}
 {% block head %}
 
 <style>
@@ -80,6 +84,7 @@
 
 
 </style>
+
 {% endblock %}
 
 {% block body %}
@@ -95,7 +100,7 @@
         </div>
         <div class="modal-body">
           <h3>
-                Are You Sure You Want to Delete this Reflection?
+                Are You Sure You Want to Delete this Blog?
           </h3>
         </div>
         <div class="modal-footer">
