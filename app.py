@@ -221,7 +221,6 @@ def dev():
 BLOG RELATED
 
 """
-
 @app.route('/blog/<id>', methods=['GET', 'POST'])
 def blogSpecific(id):
     with open(path+'data/blogs.json', 'r') as file:
@@ -238,9 +237,7 @@ def blogSpecific(id):
     if request.method == 'GET':
         return render_template("blog.html", blogs=blog)
     else:
-
         id = request.form.get('delete-id')
-
         for i in blogs:
             if i["id"] == id:
                 for j in i["structure"]:
@@ -254,13 +251,9 @@ def blogSpecific(id):
                                     file.write(line)
                 blogs.remove(i)
                 break
-
         with open(path+"data/blogs.json", "w") as file:
             json.dump(blogs,file, indent=4)
-
         return redirect("/blog")
-
-
 
 @app.route('/blog', methods=["GET"])
 def blogRouter():
