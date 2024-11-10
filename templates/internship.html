@@ -1,0 +1,191 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}Internship{% endblock %}
+
+{% block head %}
+
+<style>
+
+    .docs-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; /* Optional: space between the embeds */
+    }
+
+    .docs-container embed {
+        flex: 1 1 48%; /* Each embed takes half the width */
+        min-width: 300px; /* Ensure a minimum width */
+        height: 850px; /* Adjust height as needed */
+    }
+
+    @media (max-width: 768px) {
+        .docs-container embed {
+            flex: 1 1 100%; /* Full width for smaller screens */
+        }
+    }
+
+    .education
+    {
+        background-color: black;
+        padding:50px;
+    }
+    .image1{
+        background: url(https://sahyadrischool.org/wp-content/uploads/2020/07/Library-1-scaled.jpg);
+
+    }
+
+    .education .title{
+        color:white;
+        text-align:center;
+        margin-bottom:20px;
+    }
+    .card-header{
+        background-color: black;
+        color:white;
+    }
+
+    .card{
+        margin-top:30px;
+    }
+
+    .card:hover{
+        box-shadow: 0 5px 10px 15px lightgrey;
+        transition: box-shadow 0.5s ease-in-out;
+    }
+    .carousel-item img {
+        width: 100% !important;
+        height: 50vh;
+        object-fit: cover;
+    }
+
+    .school-link{
+        padding:15px;
+        background-color: black;
+        color: white;
+        margin-top:20px;
+        margin-bottom:20px;
+    }
+
+    .school-link:hover{
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+        text-decoration: none !important;
+        transition: background-color 0.5s ease-in-out;
+    }
+
+    .personal{
+      width:100%;
+      text-align: center;
+      background-color: #ecf0f1;
+      padding:50px;
+    }
+
+    .pfp{
+      background: url("{{url_for('static', filename='me2.jpeg')}}");
+      background-position: center;
+      background-repeat: no-repeat;
+      width:250px;
+      height: 250px;
+      background-size: cover;
+      border-radius: 10px;
+    }
+
+    .custom-container{
+      display: flex;
+      justify-content: center;
+      margin-top:50px;
+      width:90%;
+      margin-left:5%;
+    }
+
+    .about-text{
+      width:100%;
+      margin-left:50px;
+      text-align: left;
+      font-size: 20px;
+    }
+    @media screen and (max-width: 800px) {
+        .education{
+            width: 100%;
+            margin:auto;
+            padding:20px;
+        }
+        .custom-container{
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+        }
+        .about-text{
+          width: 100%;
+          margin-left: 0;
+        }
+        .pfp{
+          width:80%;
+          margin-right:10%;
+          margin-bottom: 10%;
+
+        }
+    }
+
+    @media screen and (max-width:1000px)
+    {
+      .custom-container{
+        width: 100%;
+        margin: none;
+      }
+    }
+
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="personal">
+  <h1>About The Internship</h1>
+  <div class="custom-container">
+    <div class="about-text"><p>
+        From 15th April 2023 to 15th July 2024, I worked as a part time intern / volunteer at Harsha Trust, a NGO that works in rural Odisha for rural empowerment and community well-being. 
+        Every time I would return from my boarding school, I would work here and I spent a total of 180 days throughout my internship period. The problem I was trying told to tackle was 
+        optimising the flow of data from the fields to the main office. The NGO has a vaccination and deworming programme for livestock that aims to provide well-timed vaccines to livetsock owned 
+        by rural housholds dependent on those housholds. This project is aimed on reducing mortality rates and protect the livelihoods of tribal households in Odisha. 
+    </p>
+    <p>
+        To build this information system, I collected variables and requirements from the stakeholder and used them to create data tables. 
+        Next, I spent time in the office developing the mobile app according to the deliverables.
+        I used React-Native to build the iOS and android apps. I went over multiple iterations with the stakeholders including addition of location tracking and offline syncing.
+        After building the prototype, I spent about a week in the fields where I worked on collecting feedback and testing the app. Once the app was fine tuned, I worked on building the data infrastructure. 
+        I used AWS to setup multiple micro services to manage the API that acted as a bridge between the monitoring dashboard and the mobile app. I then wrote algorithms to classify data, calculate mortality rates and coverage
+        which were then displayed in the forms of graphs and reports. I then created documentation and manuals and provided training to the the management team. 
+    </p>    
+
+    <p>
+        The exact tasks of my internship are listed below:
+        <ul>
+            <li>Design a cross-platform mobile application ot capture data on vaccination and deworming of livestock from 74 blocks in 17 districts in the state of Odisha.</li>
+            <li>Implement an information system with a database to store and record al existing ground operations and adjust for future changes with an estimated record of over 100000 to 150000 beneficiaries.</li>
+            <li>Develop a web interface with a dashboard to display graphs and statistics which wil be used to optimize the vaccination and deworming programs.</li>
+            <li>Spend a week in field visits to Hatadihi and Bissamcuttack to assess and model the data collection process.</li>
+            <li>Provide training to the MIS team on how ot use the system effectively and write a detailed 24 page manual and documentation and share ti with al team leaders for further training.</li>
+        </ul>
+    </p>
+</div>
+  </div>
+
+</div>
+
+<div class="education">
+
+    <h1 class="title">Internship Documents</h1>
+    <div class="docs-container">
+        <embed src="{{url_for('static', filename='Experience Certificate-Snehashish Laskar.pdf')}}" type="application/pdf" style="">
+        <embed src="{{url_for('static', filename='Letter of Internship-Snehashish Laskar.pdf')}}" type="application/pdf">
+    </div>
+
+</div>
+
+
+{% endblock %}

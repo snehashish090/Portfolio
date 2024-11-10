@@ -848,5 +848,10 @@ def delete_file(filename):
         return f'Error deleting file {filename}: {e}'
 
 
+@app.route("/internship", methods=["GET"])
+def internship():
+    return render_template("internship.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")
