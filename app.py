@@ -11,9 +11,12 @@ import requests
 import random
 import json
 from werkzeug.utils import secure_filename
+from flask_cors import CORS
+
 path = str(Path(__file__).parent) + "/"
 
 app = Flask("Blog Website")
+CORS(app)
 
 with open(path+"config.json", "r") as file:
     config = json.load(file)
