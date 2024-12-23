@@ -4,7 +4,6 @@ from pathlib import Path
 from datetime import timedelta
 from functools import wraps
 import hashlib
-from flask_mail import Mail
 import socket
 import os
 import requests
@@ -26,15 +25,7 @@ app.config['SECRET_KEY'] = config["secret_key"]
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
-mail = Mail(app)
 Session(app)
-
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'snehashish.laskar@gmail.com'
-app.config['MAIL_PASSWORD'] = 'jioa vavf ifgj opmo'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
 
 
 def get_ip():
