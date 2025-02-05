@@ -750,10 +750,6 @@ def addActivity():
         return redirect('/')
 
 
-
-
-
-
 """
 
 RELTAED TO MUSIC PAGE
@@ -846,6 +842,18 @@ def delete_file(filename):
 def internship():
     return render_template("internship.html")
 
+
+@app.route("/interview1", methods=["GET"])
+def interview1():
+    return render_template("interview1.html")
+
+@app.route("/interview2", methods=["GET"])
+def interview2():
+    return render_template("interview2.html")
+
+@app.route("/interview3", methods=["GET"])
+def interview3():
+    return render_template("interview3.html")
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")
