@@ -855,5 +855,9 @@ def interview2():
 def interview3():
     return render_template("interview3.html")
 
+@app.route("/cas/project", methods=["GET"])
+def casProject():
+    return render_template("casProject.html")
+
 if __name__ == "__main__":
     app.run(debug=True, port=3000, host="0.0.0.0")

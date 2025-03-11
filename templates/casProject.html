@@ -1,0 +1,178 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}Internship{% endblock %}
+
+{% block head %}
+
+<style>
+
+    .docs-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px; /* Optional: space between the embeds */
+    }
+
+    .docs-container embed {
+        flex: 1 1 48%; /* Each embed takes half the width */
+        min-width: 300px; /* Ensure a minimum width */
+        height: 850px; /* Adjust height as needed */
+    }
+
+    @media (max-width: 768px) {
+        .docs-container embed {
+            flex: 1 1 100%; /* Full width for smaller screens */
+        }
+    }
+
+    .education
+    {
+        background-color: black;
+        padding:50px;
+    }
+    .image1{
+        background: url(https://sahyadrischool.org/wp-content/uploads/2020/07/Library-1-scaled.jpg);
+
+    }
+
+    .education .title{
+        color:white;
+        text-align:center;
+        margin-bottom:20px;
+    }
+    .card-header{
+        background-color: black;
+        color:white;
+    }
+
+    .card{
+        margin-top:30px;
+    }
+
+    .card:hover{
+        box-shadow: 0 5px 10px 15px lightgrey;
+        transition: box-shadow 0.5s ease-in-out;
+    }
+    .carousel-item img {
+        width: 100% !important;
+        height: 50vh;
+        object-fit: cover;
+    }
+
+    .school-link{
+        padding:15px;
+        background-color: black;
+        color: white;
+        margin-top:20px;
+        margin-bottom:20px;
+    }
+
+    .school-link:hover{
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+        text-decoration: none !important;
+        transition: background-color 0.5s ease-in-out;
+    }
+
+    .personal{
+      width:100%;
+      text-align: center;
+      background-color: #ecf0f1;
+      padding:50px;
+    }
+
+    .pfp{
+      background: url("{{url_for('static', filename='me2.jpeg')}}");
+      background-position: center;
+      background-repeat: no-repeat;
+      width:250px;
+      height: 250px;
+      background-size: cover;
+      border-radius: 10px;
+    }
+
+    .custom-container{
+      display: flex;
+      justify-content: center;
+      margin-top:50px;
+      width:90%;
+      margin-left:5%;
+    }
+
+    .about-text{
+      width:100%;
+      margin-left:50px;
+      text-align: left;
+      font-size: 20px;
+    }
+    @media screen and (max-width: 800px) {
+        .education{
+            width: 100%;
+            margin:auto;
+            padding:20px;
+        }
+        .custom-container{
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+        }
+        .about-text{
+          width: 100%;
+          margin-left: 0;
+        }
+        .pfp{
+          width:80%;
+          margin-right:10%;
+          margin-bottom: 10%;
+
+        }
+    }
+
+    @media screen and (max-width:1000px)
+    {
+      .custom-container{
+        width: 100%;
+        margin: none;
+      }
+    }
+
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="personal">
+  <h1>CAS Project - Woven Wonders</h1>
+  <div class="custom-container">
+    <div class="about-text">
+    <p>
+Woven Wonders has been a transformative experience for me. What started as a small effort to help women earn a sustainable income through sewing grew into a thriving community project.
+
+One of the most rewarding aspects was seeing the women gain confidence and pride in their work. Many had never considered sewing professionally, and watching them develop their skills and showcase their creations was incredibly inspiring. Beyond financial independence, the project created a strong sense of community. Through workshops and teamwork, the women built meaningful connections, supported each other through challenges, and celebrated their successes together.
+
+For me, this project was a profound learning experience. I discovered the importance of patience, adaptability, and empathy in driving real change. True impact isn’t just about providing opportunities—it’s about creating an environment where people feel supported and empowered to succeed.
+
+None of this would have been possible without the dedication of volunteers, donors, and partners who believed in our mission. Their support helped create lasting change in the lives of these women and their families.
+
+Though the project has ended, its impact continues through the confidence and independence it fostered. Woven Wonders reaffirmed my belief in the power of grassroots efforts to create meaningful and lasting change.
+    </p>
+</div>
+  </div>
+
+</div>
+
+<div class="education">
+
+    <h1 class="title">CAS Project Documents</h1>
+    <div class="docs-container">
+        <embed src="{{ url_for('static', filename='project_charter.pdf') }}#toolbar=0&view=FitH" type="application/pdf">
+        <embed src="{{url_for('static', filename='risk_assessment.pdf')}}#toolbar=0&view=FitH" type="application/pdf">
+    </div>
+
+</div>
+
+
+{% endblock %}
